@@ -233,6 +233,36 @@ $ cocli comid display -f m1.cbor \
                     -d yet-another-comid-folder/
 ```
 
+#### Verbose Mode
+
+Add the `--verbose` flag to get detailed processing information:
+```
+$ cocli comid display --file data/comid/comid-psa-refval.cbor --verbose
+[INFO] Collecting CoMID files from specified paths
+[INFO] Found 1 CoMID files to process
+[INFO] Progress: 1/1 files processed
+[DEBUG] Reading CoMID file: data/comid/comid-psa-refval.cbor
+[INFO] Processing file data/comid/comid-psa-refval.cbor (416 bytes)
+[TRACE] Starting CBOR decoding for file: data/comid/comid-psa-refval.cbor
+[TRACE] Raw CBOR data length: 416 bytes
+[INFO] Starting displaying CoMID from data/comid/comid-psa-refval.cbor...
+>> [data/comid/comid-psa-refval.cbor]
+{
+  "lang": "en-GB",
+  "tag-identity": {
+    "id": "43bbe37f-2e61-4b33-aed3-53cff1428b16"
+  },
+  ...
+}
+[INFO] Successfully displayed all 1 CoMID files
+```
+
+The verbose mode provides:
+- File processing progress and statistics
+- CBOR decoding details and byte counts  
+- Error diagnostics with detailed context
+- Processing step timing and status
+
 ## CoTSs manipulation
 The `cots` subcommand allows you to create, display and validate CoTSs.
 
@@ -458,6 +488,41 @@ will give
 Error: error verifying signed-corim-bad-signature.cbor with key ec-p256.jwk: verification failed ecdsa.Verify
 ```
 
+#### Verbose Mode
+
+Add the `--verbose` flag to get detailed verification process information:
+```
+$ cocli corim verify --file cmd/testcases/signed-corim-valid.cbor --key cmd/testcases/ec-p256.jwk --verbose
+[INFO] Starting CoRIM verification process
+[DEBUG] Signed CoRIM file: cmd/testcases/signed-corim-valid.cbor
+[DEBUG] Key file: cmd/testcases/ec-p256.jwk
+[DEBUG] Reading signed CoRIM file
+[INFO] Processing file cmd/testcases/signed-corim-valid.cbor (808 bytes)
+[TRACE] Original signed CoRIM data length: 808 bytes
+[DEBUG] No ASN header bytes detected
+[DEBUG] Decoding COSE Sign1 structure
+[TRACE] Processing COSE data length: 808 bytes
+[INFO] Successfully decoded COSE Sign1 structure
+[DEBUG] Reading verification key file
+[INFO] Processing file cmd/testcases/ec-p256.jwk (228 bytes)
+[TRACE] JWK data length: 228 bytes
+[DEBUG] Parsing JWK to extract public key
+[INFO] Successfully loaded public key from JWK
+[TRACE] Public key type: *ecdsa.PublicKey
+[INFO] Performing cryptographic signature verification
+[INFO] Signature verification successful
+[DEBUG] CoRIM contains 1 embedded tags
+>> "cmd/testcases/signed-corim-valid.cbor" verified
+```
+
+The verbose mode provides detailed insights into:
+- File reading and processing steps
+- ASN header detection and stripping
+- COSE Sign1 structure decoding
+- JWK parsing and public key extraction
+- Cryptographic signature verification process
+- Embedded tag information
+
 ### Display
 
 Use the `corim display` subcommand to print to stdout a signed CoRIM in human
@@ -524,6 +589,50 @@ Tags:
 [...]
 }
 ```
+
+#### Verbose Mode
+
+Add the `--verbose` flag to get detailed processing information during display operations:
+```
+$ cocli corim display --file cmd/testcases/signed-corim-valid.cbor --show-tags --verbose
+[INFO] Processing CoRIM file: cmd/testcases/signed-corim-valid.cbor
+[DEBUG] Show tags mode: true
+[DEBUG] Reading CoRIM file from disk
+[INFO] Processing file cmd/testcases/signed-corim-valid.cbor (808 bytes)
+[TRACE] Original CBOR data length: 808 bytes
+[DEBUG] No ASN header bytes detected
+[DEBUG] Attempting to decode as signed CoRIM (COSE format)
+[INFO] Successfully decoded as signed CoRIM
+[DEBUG] CoRIM has 1 tags
+[DEBUG] Extracting Meta information from signed CoRIM
+[TRACE] Meta JSON size: 194 bytes
+Meta:
+{
+  "signer": {
+    "name": "ACME Ltd signing key",
+    "uri": "https://acme.example"
+  },
+  ...
+}
+[DEBUG] Extracting unsigned CoRIM content
+[TRACE] CoRIM JSON size: 1130 bytes
+CoRIM:
+{
+  "corim-id": "5c57e8f4-46cd-421b-91c9-08cf93e13cfc",
+  ...
+}
+[INFO] Displaying embedded tags (1 total)
+Tags:
+[INFO] Progress: 1/1 tags processed
+[DEBUG] Processing CoMID tag at index 0 (content size: 416 bytes)
+```
+
+The verbose mode shows:
+- File processing and size information
+- CBOR data processing steps
+- Meta and CoRIM extraction details
+- Tag processing with progress indicators
+- Detailed decoding information for troubleshooting
 
 ### Extract CoSWIDs, CoMIDs and CoTSs
 
