@@ -4,6 +4,7 @@
 package cmd
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
@@ -89,4 +90,22 @@ func makeFileName(dirName, baseName, ext string) string {
 			),
 		)+ext,
 	)
+}
+
+// stripASNHeaderBytes removes ASN header bytes from CoRIM files if present.
+// Several vendors distribute CoRIM manifest files with ASN header bytes:
+// d9 01 f4 d9 01 f6 (tagged-corim-type-choice #6.500 of tagged-signed-corim #6.502)
+// This function automatically detects and strips these bytes if present.
+func stripASNHeaderBytes(data []byte) []byte {
+	// ASN header pattern: d9 01 f4 d9 01 f6
+	asnHeaderPattern := []byte{0xd9, 0x01, 0xf4, 0xd9, 0x01, 0xf6}
+	
+	// Check if the data starts with the ASN header pattern
+	if len(data) >= len(asnHeaderPattern) && bytes.HasPrefix(data, asnHeaderPattern) {
+		// Strip the ASN header bytes
+		return data[len(asnHeaderPattern):]
+	}
+	
+	// Return original data if no ASN header is found
+	return data
 }

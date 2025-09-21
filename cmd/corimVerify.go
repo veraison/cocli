@@ -79,6 +79,9 @@ func verify(signedCorimFile, keyFile string) error {
 		return fmt.Errorf("error loading signed CoRIM from %s: %w", signedCorimFile, err)
 	}
 
+	// strip ASN header bytes if present (d9 01 f4 d9 01 f6)
+	signedCorimCBOR = stripASNHeaderBytes(signedCorimCBOR)
+
 	if err = s.FromCOSE(signedCorimCBOR); err != nil {
 		return fmt.Errorf("error decoding signed CoRIM from %s: %w", signedCorimFile, err)
 	}
