@@ -19,6 +19,7 @@ import (
 var (
 	cfgFile string
 	fs      = afero.NewOsFs()
+	verbose bool
 
 	cliConfig  = &ClientConfig{}
 	authMethod = auth.MethodPassthrough
@@ -45,6 +46,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $XDG_CONFIG_HOME/cocli/config.yaml)")
+	rootCmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "enable verbose output with detailed processing information")
 }
 
 // initConfig reads in config file and ENV variables if set

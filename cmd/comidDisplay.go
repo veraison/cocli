@@ -40,23 +40,31 @@ func NewComidDisplayCmd() *cobra.Command {
 				return err
 			}
 
+			VerboseInfo("Collecting CoMID files from specified paths")
 			filesList := filesList(comidDisplayFiles, comidDisplayDirs, ".cbor")
 			if len(filesList) == 0 {
+				VerboseInfo("No .cbor files found in specified locations")
 				return errors.New("no files found")
 			}
 
+			VerboseInfo("Found %d CoMID files to process", len(filesList))
+
 			errs := 0
-			for _, file := range filesList {
+			for i, file := range filesList {
+				VerboseProgress(i+1, len(filesList), "files processed")
 				if err := displayComidFile(file); err != nil {
 					fmt.Printf(">> failed displaying %q: %v\n", file, err)
+					VerboseDebug("Failed to display file %s: %v", file, err)
 					errs++
 					continue
 				}
 			}
 
 			if errs != 0 {
+				VerboseInfo("Completed with %d failures out of %d files", errs, len(filesList))
 				return fmt.Errorf("%d/%d display(s) failed", errs, len(filesList))
 			}
+			VerboseInfo("Successfully displayed all %d CoMID files", len(filesList))
 			return nil
 		},
 	}
@@ -78,12 +86,23 @@ func displayComidFile(file string) error {
 		err  error
 	)
 
+	VerboseDebug("Reading CoMID file: %s", file)
 	if data, err = afero.ReadFile(fs, file); err != nil {
 		return fmt.Errorf("error loading CoMID from %s: %w", file, err)
 	}
 
+	// Get file stats for verbose output
+	if stat, err := fs.Stat(file); err == nil {
+		VerboseFileStats(file, stat.Size())
+	}
+
+	VerboseTrace("Starting CBOR decoding for file: %s", file)
+	VerboseTrace("Raw CBOR data length: %d bytes", len(data))
+
 	// use file name as heading
-	return printComid(data, ">> ["+file+"]")
+	return VerboseOperation(fmt.Sprintf("displaying CoMID from %s", file), func() error {
+		return printComid(data, ">> ["+file+"]")
+	})
 }
 
 func checkComidDisplayArgs() error {

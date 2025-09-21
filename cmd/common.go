@@ -4,6 +4,7 @@
 package cmd
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"path/filepath"
@@ -89,4 +90,92 @@ func makeFileName(dirName, baseName, ext string) string {
 			),
 		)+ext,
 	)
+}
+
+// stripASNHeaderBytes removes ASN header bytes from CoRIM files if present.
+// Several vendors distribute CoRIM manifest files with ASN header bytes:
+// d9 01 f4 d9 01 f6 (tagged-corim-type-choice #6.500 of tagged-signed-corim #6.502)
+// This function automatically detects and strips these bytes if present.
+func stripASNHeaderBytes(data []byte) []byte {
+	// ASN header pattern: d9 01 f4 d9 01 f6
+	asnHeaderPattern := []byte{0xd9, 0x01, 0xf4, 0xd9, 0x01, 0xf6}
+	
+	// Check if the data starts with the ASN header pattern
+	if len(data) >= len(asnHeaderPattern) && bytes.HasPrefix(data, asnHeaderPattern) {
+		// Strip the ASN header bytes
+		return data[len(asnHeaderPattern):]
+	}
+	
+	// Return original data if no ASN header is found
+	return data
+}
+
+// Verbose logging utilities
+
+// LogLevel represents different levels of verbose output
+type LogLevel int
+
+const (
+	LogLevelInfo LogLevel = iota
+	LogLevelDebug
+	LogLevelTrace
+)
+
+// GetVerbose returns the current verbose flag status
+func GetVerbose() bool {
+	return verbose
+}
+
+// VerboseInfo prints informational messages when verbose mode is enabled
+func VerboseInfo(format string, args ...interface{}) {
+	if verbose {
+		fmt.Printf("[INFO] "+format+"\n", args...)
+	}
+}
+
+// VerboseDebug prints debug messages when verbose mode is enabled
+func VerboseDebug(format string, args ...interface{}) {
+	if verbose {
+		fmt.Printf("[DEBUG] "+format+"\n", args...)
+	}
+}
+
+// VerboseTrace prints trace messages when verbose mode is enabled
+func VerboseTrace(format string, args ...interface{}) {
+	if verbose {
+		fmt.Printf("[TRACE] "+format+"\n", args...)
+	}
+}
+
+// VerboseOperation logs the start and completion of operations
+func VerboseOperation(operation string, fn func() error) error {
+	if verbose {
+		fmt.Printf("[INFO] Starting %s...\n", operation)
+	}
+	
+	err := fn()
+	
+	if verbose {
+		if err != nil {
+			fmt.Printf("[INFO] %s failed: %v\n", operation, err)
+		} else {
+			fmt.Printf("[INFO] %s completed successfully\n", operation)
+		}
+	}
+	
+	return err
+}
+
+// VerboseFileStats prints file information when verbose mode is enabled
+func VerboseFileStats(filename string, size int64) {
+	if verbose {
+		fmt.Printf("[INFO] Processing file %s (%d bytes)\n", filename, size)
+	}
+}
+
+// VerboseProgress prints progress information for batch operations
+func VerboseProgress(current, total int, operation string) {
+	if verbose {
+		fmt.Printf("[INFO] Progress: %d/%d %s\n", current, total, operation)
+	}
 }
