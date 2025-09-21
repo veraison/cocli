@@ -1,0 +1,17 @@
+{
+  "corim-id": "5c57e8f4-46cd-421b-91c9-08cf93e13cfd",
+  "profile": "tag:arm.com,2025:psa#1.0.0",
+  "validity": {
+    "not-before": "2025-01-01T00:00:00Z",
+    "not-after": "2026-12-31T23:59:59Z"
+  },
+  "entities": [
+    {
+      "name": "ACME PSA Device Manufacturer",
+      "regid": "acme.example",
+      "roles": [
+        "manifestCreator"
+      ]
+    }
+  ]
+}

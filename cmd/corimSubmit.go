@@ -35,10 +35,16 @@ func NewCorimSubmitCmd(submitter ISubmitter) *cobra.Command {
 		Short: "submit a CBOR-encoded CoRIM payload",
 		Long: `submit a CBOR-encoded CoRIM payload with supplied media type to the given API Server
 
-	To submit the CBOR-encoded CoRIM from file "unsigned-corim.cbor" with media type
-	"application/corim-unsigned+cbor; profile=http://arm.com/psa/iot/1" to the Veraison
-	provisioning API endpoint "https://veraison.example/endorsement-provisioning/v1", do:
+	To submit the CBOR-encoded CoRIM from file "unsigned-corim.cbor" with the new PSA profile
+	media type to the Veraison provisioning API endpoint 
+	"https://veraison.example/endorsement-provisioning/v1", do:
 
+	cocli corim submit \
+			--corim-file=unsigned-corim.cbor \
+			--api-server="https://veraison.example/endorsement-provisioning/v1/submit" \
+			--media-type="application/corim-unsigned+cbor; profile=tag:arm.com,2025:psa#1.0.0"
+
+	For legacy PSA profile support, use the old media type:
 
 	cocli corim submit \
 			--corim-file=unsigned-corim.cbor \

@@ -172,3 +172,32 @@ func Test_CorimSubmitCmd_submit_not_ok(t *testing.T) {
 	err = cmd.Execute()
 	assert.EqualError(t, err, "submit CoRIM payload failed reason: run failed: unexpected HTTP response code 404")
 }
+
+func Test_CorimSubmitCmd_new_psa_profile_ok(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	ms := mock_deps.NewMockISubmitter(ctrl)
+	cmd := NewCorimSubmitCmd(ms)
+
+	args := []string{
+		"--corim-file=corim.cbor",
+		"--api-server=http://veraison.example/endorsement-provisioning/v1/submit",
+		"--media-type=application/corim-unsigned+cbor; profile=tag:arm.com,2025:psa#1.0.0",
+	}
+	cmd.SetArgs(args)
+
+	fs = afero.NewMemMapFs()
+	err := afero.WriteFile(fs, "corim.cbor", testSignedCorimValid, 0644)
+	require.NoError(t, err)
+
+	ms.EXPECT().SetAuth(gomock.Any())
+	ms.EXPECT().SetSubmitURI("http://veraison.example/endorsement-provisioning/v1/submit").Return(nil)
+	ms.EXPECT().SetIsInsecure(false)
+	ms.EXPECT().SetCerts([]string{})
+	ms.EXPECT().SetDeleteSession(true)
+
+	ms.EXPECT().Run(testSignedCorimValid, "application/corim-unsigned+cbor; profile=tag:arm.com,2025:psa#1.0.0").Return(nil)
+	err = cmd.Execute()
+	assert.NoError(t, err)
+}

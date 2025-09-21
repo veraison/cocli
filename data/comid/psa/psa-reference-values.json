@@ -1,0 +1,57 @@
+{
+  "tag-identity": {
+    "tag-id": "urn:uuid:3f06af63-a93c-11e4-9797-00505690773f"
+  },
+  "triples": {
+    "reference-triples": [
+      [
+        {
+          "class": {
+            "class-id": {
+              "$class": "tagged-bytes",
+              "bytes": "YWNtZS1pbXBsZW1lbnRhdGlvbi1pZC0wMDAwMDAwMDE="
+            }
+          }
+        },
+        [
+          {
+            "mkey": "psa.software-component",
+            "mval": {
+              "digests": [
+                {
+                  "alg": "sha-256",
+                  "val": "mjcfKpFrC27mzsstJvCzIG7wdFeL5V2byU9vP+OrhqoA"
+                }
+              ],
+              "name": "BL",
+              "cryptokeys": [
+                {
+                  "$class": "tagged-bytes",
+                  "bytes": "U3h5YwdTXfPsjYsVoi7NxkFBnD0wYM/jIjjA+pc/eqM="
+                }
+              ]
+            }
+          },
+          {
+            "mkey": "psa.software-component", 
+            "mval": {
+              "digests": [
+                {
+                  "alg": "sha-256",
+                  "val": "U8I05ehHK2rFHBrhyr/+Bv6tBT646P/Yl3sBBlW/3cM="
+                }
+              ],
+              "name": "PRoT",
+              "cryptokeys": [
+                {
+                  "$class": "tagged-bytes", 
+                  "bytes": "U3h5YwdTXfPsjYsVoi7NxkFBnD0wYM/jIjjA+pc/eqQ="
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    ]
+  }
+}

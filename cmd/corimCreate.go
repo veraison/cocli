@@ -52,6 +52,12 @@ func NewCorimCreateCmd() *cobra.Command {
 	                   --coswid=dir/coswid2.cbor \
 					   --cots=cots1.cbor
 	                   --output=corim.cbor
+
+	Create a PSA profile CoRIM using the new PSA profile template and PSA CoMIDs:
+
+	  cocli corim create --template=data/corim/templates/corim-psa.json \
+	                   --comid-dir=data/comid/psa \
+	                   --output=psa-corim.cbor
 	`,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
