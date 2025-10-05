@@ -31,16 +31,11 @@
           "measurements": [
             {
               "key": {
-                "type": "tdx.qe-identity",
+                "type": "psa.refval-id",
                 "value": {
-                  "vendor": {
-                    "type": "uuid",
-                    "value": "CD1F0E55-26F9-460D-B9D8-F7FDE171787C"
-                  },
-                  "isvVendor": {
-                    "type": "uint",
-                    "value": 2
-                  }
+                  "label": "TDX-QE",
+                  "version": "1.0.0",
+                  "signer-id": "rLsRx+TaIXIFUjzkzhokWuGiOa48a/2eeHH35di66Gs="
                 }
               },
               "value": {
