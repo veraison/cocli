@@ -1,0 +1,62 @@
+{
+    "lang": "en-GB",
+    "tag-identity": {
+      "id": "43BBE37F-2E61-4B33-AED3-53CFF1428B17",
+      "version": 0
+    },
+    "entities": [
+      {
+        "name": "Intel Corporation",
+        "regid": "https://intel.com",
+        "roles": [
+          "tagCreator",
+          "creator",
+          "maintainer"
+        ]
+      }
+    ],
+    "triples": {
+      "reference-values": [
+        {
+          "environment": {
+            "class": {
+              "id": {
+                "type": "oid",
+                "value": "2.16.840.1.113741.1.2.3.4.2"
+              },
+              "vendor": "Intel Corporation",
+              "model": "TDX Quoting Enclave"
+            }
+          },
+          "measurements": [
+            {
+              "key": {
+                "type": "tdx.qe-identity",
+                "value": {
+                  "vendor": {
+                    "type": "uuid",
+                    "value": "CD1F0E55-26F9-460D-B9D8-F7FDE171787C"
+                  },
+                  "isvVendor": {
+                    "type": "uint",
+                    "value": 2
+                  }
+                }
+              },
+              "value": {
+                "svn": {
+                  "type": "exact-value",
+                  "value": 4
+                },
+                "value": {
+                  "digests": [
+                    "sha-256:AmOCmYm2/ZVPcrqvL8ZLwuLwHWktTecphuqAj26ZgT8="
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
