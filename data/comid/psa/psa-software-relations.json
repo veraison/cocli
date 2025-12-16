@@ -1,0 +1,65 @@
+{
+  "tag-identity": {
+    "tag-id": "urn:uuid:3f06af63-a93c-11e4-9797-00505690773d"
+  },
+  "triples": {
+    "psa-swrel-triples": [
+      [
+        {
+          "class": {
+            "class-id": {
+              "$class": "tagged-bytes",
+              "bytes": "YWNtZS1pbXBsZW1lbnRhdGlvbi1pZC0wMDAwMDAwMDE="
+            }
+          }
+        },
+        {
+          "new": {
+            "mval": {
+              "version": {
+                "version": "1.3.0"
+              },
+              "digests": [
+                {
+                  "alg": "sha-256",
+                  "val": "U8I05ehHK2rFHBrhyr/+Bv6tBT646P/Yl3sBBlW/3cM="
+                }
+              ],
+              "name": "PRoT",
+              "cryptokeys": [
+                {
+                  "$class": "tagged-bytes",
+                  "bytes": "U3h5YwdTXfPsjYsVoi7NxkFBnD0wYM/jIjjA+pc/eqQ="
+                }
+              ]
+            }
+          },
+          "rel": {
+            "type": 1,
+            "security-critical": true
+          },
+          "old": {
+            "mval": {
+              "version": {
+                "version": "1.2.5" 
+              },
+              "digests": [
+                {
+                  "alg": "sha-256",
+                  "val": "U8I05ehHK2rFHBrhyr/+Bv2tBT646P/Yl3sBBlW/3cM="
+                }
+              ],
+              "name": "PRoT",
+              "cryptokeys": [
+                {
+                  "$class": "tagged-bytes",
+                  "bytes": "U3h5YwdTXfPsjYsVoi7NxkFBnD0wYM/jIjjA+pc/eqQ="
+                }
+              ]
+            }
+          }
+        }
+      ]
+    ]
+  }
+}

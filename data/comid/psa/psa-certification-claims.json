@@ -1,0 +1,42 @@
+{
+  "tag-identity": {
+    "tag-id": "urn:uuid:dbb0508a-c658-421c-99c9-04124bab59ca"
+  },
+  "triples": {
+    "conditional-endorsement-triples": [
+      [
+        [
+          {
+            "class": {
+              "class-id": {
+                "$class": "tagged-bytes",
+                "bytes": "YWNtZS1pbXBsZW1lbnRhdGlvbi1pZC0wMDAwMDAwMDE="
+              }
+            }
+          },
+          {
+            "mkey": "psa.software-component",
+            "mval": {
+              "digests": [
+                {
+                  "alg": "sha-256", 
+                  "val": "U8I05ehHK2rFHBrhyr/+Bv6tBT646P/Yl3sBBlW/3cM="
+                }
+              ],
+              "name": "PRoT",
+              "cryptokeys": [
+                {
+                  "$class": "tagged-bytes",
+                  "bytes": "U3h5YwdTXfPsjYsVoi7NxkFBnD0wYM/jIjjA+pc/eqQ="
+                }
+              ]
+            }
+          }
+        ],
+        {
+          "psa-cert-num": "1234567890123 - 12345"
+        }
+      ]
+    ]
+  }
+}

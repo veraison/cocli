@@ -1,0 +1,29 @@
+{
+  "tag-identity": {
+    "tag-id": "urn:uuid:3f06af63-a93c-11e4-9797-00505690773e"
+  },
+  "triples": {
+    "attest-key-triples": [
+      [
+        {
+          "class": {
+            "class-id": {
+              "$class": "tagged-bytes", 
+              "bytes": "YWNtZS1pbXBsZW1lbnRhdGlvbi1pZC0wMDAwMDAwMDE="
+            }
+          },
+          "instance": {
+            "$class": "tagged-ueid",
+            "ueid": "AUyj5PUL8kjDl4cCDWj/0FyIdndRvyZFypI/V6mL7NKW"
+          }
+        },
+        [
+          {
+            "$class": "tagged-pkix-base64-key",
+            "key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAETl4iCZ47zrRbRG0TVf0dw7VFlHtv18HInYhnmMNybo+A1wuECyVqrDSmLt4QQzZPBECV8ANHS5HgGCCSr7E/Lg=="
+          }
+        ]
+      ]
+    ]
+  }
+}
