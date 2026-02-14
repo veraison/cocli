@@ -1,4 +1,4 @@
-// Copyright 2021-2025 Contributors to the Veraison project.
+// Copyright 2021-2026 Contributors to the Veraison project.
 // SPDX-License-Identifier: Apache-2.0
 
 package cmd
@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/veraison/corim/comid"
 	"github.com/veraison/corim/profiles/tdx"
 )
 
@@ -87,7 +86,7 @@ func Test_ComidCreateCmd_template_from_file_to_default_dir(t *testing.T) {
 	cmd := NewComidCreateCmd()
 
 	fs = afero.NewMemMapFs()
-	err = afero.WriteFile(fs, "ok.json", []byte(comid.PSARefValJSONTemplate), 0644)
+	err = afero.WriteFile(fs, "ok.json", testComidTemplate, 0644)
 	require.NoError(t, err)
 
 	args := []string{
@@ -110,7 +109,7 @@ func Test_ComidCreateCmd_template_from_dir_to_custom_dir(t *testing.T) {
 	cmd := NewComidCreateCmd()
 
 	fs = afero.NewMemMapFs()
-	err = afero.WriteFile(fs, "testdir/ok.json", []byte(comid.PSARefValJSONTemplate), 0644)
+	err = afero.WriteFile(fs, "testdir/ok.json", testComidTemplate, 0644)
 	require.NoError(t, err)
 
 	args := []string{

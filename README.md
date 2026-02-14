@@ -556,9 +556,9 @@ Further, it is required to supply the media type of the content via the
 `--media-type` switch (abbrev. `-m`)
 ```
 $ cocli corim submit \
-    --corim-file data/corim/unsigned-corim.cbor \
-    --api-server "https://veraison.example/endorsement-provisioning/v1/submit" \
-    --media-type "application/corim-unsigned+cbor; profile=http://arm.com/psa/iot/1"
+  --corim-file data/corim/unsigned-corim.cbor \
+  --api-server "https://veraison.example/endorsement-provisioning/v1/submit" \
+  --media-type "application/corim-unsigned+cbor; profile=tag:arm.com,2025:psa#1.0.0"
 
 >> "unsigned-corim.cbor" submit ok
 ```

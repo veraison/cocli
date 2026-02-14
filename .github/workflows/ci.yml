@@ -21,7 +21,7 @@ jobs:
         fetch-depth: 1
     - name: Install mockgen
       run: |
-        go install github.com/golang/mock/mockgen@v1.5.0
+        go install go.uber.org/mock/mockgen@v0.6.0
     - name: Build project
       run: go build ./...
     - name: Run tests

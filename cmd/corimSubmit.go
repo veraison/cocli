@@ -1,4 +1,4 @@
-// Copyright 2021-2024 Contributors to the Veraison project.
+// Copyright 2021-2026 Contributors to the Veraison project.
 // SPDX-License-Identifier: Apache-2.0
 
 package cmd
@@ -36,14 +36,14 @@ func NewCorimSubmitCmd(submitter ISubmitter) *cobra.Command {
 		Long: `submit a CBOR-encoded CoRIM payload with supplied media type to the given API Server
 
 	To submit the CBOR-encoded CoRIM from file "unsigned-corim.cbor" with media type
-	"application/corim-unsigned+cbor; profile=http://arm.com/psa/iot/1" to the Veraison
+	"application/corim-unsigned+cbor; profile=tag:arm.com,2025:psa#1.0.0" to the Veraison
 	provisioning API endpoint "https://veraison.example/endorsement-provisioning/v1", do:
 
 
 	cocli corim submit \
 			--corim-file=unsigned-corim.cbor \
 			--api-server="https://veraison.example/endorsement-provisioning/v1/submit" \
-			--media-type="application/corim-unsigned+cbor; profile=http://arm.com/psa/iot/1"
+			--media-type="application/corim-unsigned+cbor; profile=tag:arm.com,2025:psa#1.0.0"
 	`,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
