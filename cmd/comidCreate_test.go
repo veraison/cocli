@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/veraison/corim/comid"
 	_ "github.com/veraison/corim/profiles/cca"
 	"github.com/veraison/corim/profiles/tdx"
 )
@@ -168,6 +169,63 @@ func Test_ComidCreateCmd_InvalidProfile(t *testing.T) {
 
 	err = cmd.Execute()
 	assert.EqualError(t, err, "1/1 creations(s) failed")
+}
+
+func Test_ComidCreateCmd_template_with_dependency_triples(t *testing.T) {
+	var err error
+
+	cmd := NewComidCreateCmd()
+
+	fs = afero.NewMemMapFs()
+	err = afero.WriteFile(fs, "comid-with-dependency-triples.json", testDependencyTriplesTemplate, 0644)
+	require.NoError(t, err)
+
+	cmd.SetArgs([]string{"--template=comid-with-dependency-triples.json"})
+	err = cmd.Execute()
+	require.NoError(t, err)
+
+	cborData, err := afero.ReadFile(fs, "comid-with-dependency-triples.cbor")
+	require.NoError(t, err)
+
+	var c comid.Comid
+	err = c.FromCBOR(cborData)
+	require.NoError(t, err)
+	require.NotNil(t, c.Triples.DomainDependencies)
+	require.False(t, c.Triples.DomainDependencies.IsEmpty())
+	dd := *c.Triples.DomainDependencies
+	require.Len(t, dd, 1)
+	assert.GreaterOrEqual(t, len(dd[0].Trustees), 1)
+	assert.NoError(t, dd[0].Valid())
+}
+
+// Test_ComidCreateCmd_template_with_invalid_dependency_triples checks that creation fails
+// when the template has invalid dependency-triples (e.g. empty trustees).
+func Test_ComidCreateCmd_template_with_invalid_dependency_triples(t *testing.T) {
+	invalidTemplate := `{
+  "tag-identity": {"id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"},
+  "triples": {
+    "reference-values": [
+      {
+        "environment": {"class": {"id": {"type": "uuid", "value": "DD6661F0-0928-4401-966B-589EA74E3272"}}},
+        "measurements": [{"value": {"digests": ["sha-256:RKozavTLFKh5Qy5T3WVxx/qbzK+3X0iCWSYtbqOk2Rs="]}}]
+      }
+    ],
+    "dependency-triples": [
+      {
+        "domain-id": {"class": {"id": {"type": "uuid", "value": "DD6661F0-0928-4401-966B-589EA74E3272"}}},
+        "trustees": []
+      }
+    ]
+  }
+}`
+	cmd := NewComidCreateCmd()
+	fs = afero.NewMemMapFs()
+	require.NoError(t, afero.WriteFile(fs, "bad.json", []byte(invalidTemplate), 0644))
+
+	cmd.SetArgs([]string{"--template=bad.json"})
+	err := cmd.Execute()
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "failed")
 }
 
 func Test_ComidCreateCmd_WithCCAPlatformProfile(t *testing.T) {
