@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -84,10 +85,15 @@ func initConfig() {
 }
 
 func readConfig(path string) (*viper.Viper, error) {
+	// We want to make sure that tests run in a controlled enviroment and
+	// can't be influenced by user's config file (if it exits) or user-set
+	// enviroment variables.
+	insideTest := strings.HasSuffix(os.Args[0], ".test")
+
 	v := viper.GetViper()
 	if path != "" {
 		v.SetConfigFile(path)
-	} else {
+	} else if !insideTest {
 		wd, err := os.Getwd()
 		if err != nil {
 			return nil, err
@@ -102,8 +108,10 @@ func readConfig(path string) (*viper.Viper, error) {
 		v.SetConfigName("config")
 	}
 
-	v.SetEnvPrefix("cocli")
-	v.AutomaticEnv()
+	if !insideTest {
+		v.SetEnvPrefix("cocli")
+		v.AutomaticEnv()
+	}
 
 	err := v.ReadInConfig()
 	if errors.As(err, &viper.ConfigFileNotFoundError{}) {
