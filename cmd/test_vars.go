@@ -16,7 +16,7 @@ var (
 
 	//go:embed testcases/test-comid.json
 	testComidTemplate []byte
-	badCBOR = comid.MustHexDecode(nil, "ffff")
+	badCBOR           = comid.MustHexDecode(nil, "ffff")
 	// a "tag-id only" CoMID {1: {0: h'366D0A0A598845ED84882F2A544F6242'}}
 	invalidComid = comid.MustHexDecode(nil,
 		"a101a10050366d0a0a598845ed84882f2a544f6242",
@@ -86,5 +86,7 @@ var (
 
 	//go:embed testcases/cca-realm-refval.json
 	CCARealmRefValTemplate []byte
-)
 
+	//go:embed testcases/comid-with-dependency-triples.json
+	testDependencyTriplesTemplate []byte
+)
