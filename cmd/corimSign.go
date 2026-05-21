@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/veraison/corim/corim"
@@ -144,6 +145,15 @@ func sign(unsignedCorimFile, keyFile, metaFile string, outputFile, certFile, int
 		Meta:          m,
 	}
 
+	kid, err := keyIDFromJWK(keyJWK)
+	if err != nil {
+		return "", err
+	}
+
+	if kid != "" {
+		s.KeyID = []byte(kid)
+	}
+
 	// Add signing certificate if provided
 	if certFile != nil && *certFile != "" {
 		if certDER, err = afero.ReadFile(fs, *certFile); err != nil {
@@ -188,6 +198,15 @@ func sign(unsignedCorimFile, keyFile, metaFile string, outputFile, certFile, int
 	}
 
 	return signedCorimFile, nil
+}
+
+func keyIDFromJWK(keyJWK []byte) (string, error) {
+	k, err := jwk.ParseKey(keyJWK)
+	if err != nil {
+		return "", err
+	}
+
+	return k.KeyID(), nil
 }
 
 func init() {
