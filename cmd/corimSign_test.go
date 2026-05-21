@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/veraison/corim/corim"
 )
 
 func Test_CorimSignCmd_unknown_argument(t *testing.T) {
@@ -235,6 +236,13 @@ func Test_CorimSignCmd_ok_with_default_output_file(t *testing.T) {
 
 	_, err = fs.Stat("signed-ok.cbor")
 	assert.NoError(t, err)
+
+	bytes, err := afero.ReadFile(fs, "signed-ok.cbor")
+	assert.NoError(t, err)
+
+	signed, err := corim.UnmarshalAndValidateSignedCorimFromCBOR(bytes)
+	assert.NoError(t, err)
+	assert.Equal(t, []byte("1"), signed.KeyID)
 }
 
 func Test_CorimSignCmd_ok_with_custom_output_file(t *testing.T) {
