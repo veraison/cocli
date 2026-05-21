@@ -69,7 +69,9 @@ func NewCorimSignCmd() *cobra.Command {
 
 	corimSignCorimFile = cmd.Flags().StringP("file", "f", "", "an unsigned CoRIM file (in CBOR format)")
 	corimSignMetaFile = cmd.Flags().StringP("meta", "m", "", "CoRIM Meta file (in JSON format)")
-	corimSignKeyFile = cmd.Flags().StringP("key", "k", "", "signing key in JWK format")
+	corimSignKeyFile = cmd.Flags().StringP("key", "k", "", "signing key in JWK format; if a kid is present, " +
+		"it will be set in the signed CoRIM (corresponding to the UTF-8 bytes of the string kid in the " +
+		"JWK)")
 	corimSignOutputFile = cmd.Flags().StringP("output", "o", "", "name of the generated COSE Sign1 file")
 	corimSignCertFile = cmd.Flags().StringP("cert", "c", "", "signing certificate in DER format")
 	corimSignIntermediateCerts = cmd.Flags().String("intermediates", "", "intermediate certificates in DER format")
