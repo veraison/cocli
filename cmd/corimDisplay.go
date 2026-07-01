@@ -12,7 +12,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/veraison/corim/corim"
 	"github.com/veraison/corim/cots"
-	"github.com/veraison/eat"
 )
 
 var (
@@ -132,7 +131,7 @@ func display(corimFile string, showTags bool) error {
 }
 
 // displayTags processes and displays embedded tags within a CoRIM.
-func displayTags(tags []corim.Tag, p *eat.Profile) {
+func displayTags(tags []corim.Tag, p *corim.Profile) {
 	for i, t := range tags {
 		hdr := fmt.Sprintf(">> [ %d ]", i)
 

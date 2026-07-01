@@ -9,7 +9,7 @@ import (
 
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
-	"github.com/veraison/eat"
+	"github.com/veraison/corim/corim"
 )
 
 var (
@@ -81,7 +81,7 @@ func NewComidDisplayCmd() *cobra.Command {
 func displayComidFile(file string) error {
 	var (
 		data []byte
-		p    *eat.Profile
+		p    *corim.Profile
 		err  error
 	)
 
@@ -90,9 +90,9 @@ func displayComidFile(file string) error {
 	}
 
 	if comidDisplayProfile != "" {
-		p, err = eat.NewProfile(comidDisplayProfile)
+		p, err = corim.NewProfileFromString(comidDisplayProfile)
 		if err != nil {
-			return fmt.Errorf("error creating profile %q from template: %w", comidDisplayProfile, err)
+			return fmt.Errorf("error creating profile %q from --profile: %w", comidDisplayProfile, err)
 		}
 	}
 	// use file name as heading

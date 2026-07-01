@@ -158,3 +158,36 @@ func Test_CorimDisplayCmd_ok_nested_view_with_cots(t *testing.T) {
 	err = cmd.Execute()
 	assert.NoError(t, err)
 }
+
+func Test_CorimDisplayCmd_unsigned_corim_top_level(t *testing.T) {
+	cmd := NewCorimDisplayCmd()
+
+	args := []string{
+		"--file=unsigned.cbor",
+	}
+	cmd.SetArgs(args)
+
+	fs = afero.NewMemMapFs()
+	err := afero.WriteFile(fs, "unsigned.cbor", testCorimValid, 0644)
+	require.NoError(t, err)
+
+	err = cmd.Execute()
+	assert.NoError(t, err)
+}
+
+func Test_CorimDisplayCmd_unsigned_corim_nested_view(t *testing.T) {
+	cmd := NewCorimDisplayCmd()
+
+	args := []string{
+		"--file=unsigned.cbor",
+		"--show-tags",
+	}
+	cmd.SetArgs(args)
+
+	fs = afero.NewMemMapFs()
+	err := afero.WriteFile(fs, "unsigned.cbor", testCorimValid, 0644)
+	require.NoError(t, err)
+
+	err = cmd.Execute()
+	assert.NoError(t, err)
+}
