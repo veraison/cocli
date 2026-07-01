@@ -11,7 +11,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/veraison/corim/comid"
 	"github.com/veraison/corim/corim"
-	"github.com/veraison/eat"
 )
 
 var (
@@ -106,7 +105,7 @@ func templateToCBOR(tmplFile, outputDir string) (string, error) {
 		tmplData, cborData []byte
 		cborFile           string
 		c                  *comid.Comid
-		p                  *eat.Profile
+		p                  *corim.Profile
 		err                error
 	)
 
@@ -115,7 +114,7 @@ func templateToCBOR(tmplFile, outputDir string) (string, error) {
 	}
 
 	if comidCreateProfile != "" {
-		p, err = eat.NewProfile(comidCreateProfile)
+		p, err = corim.NewProfileFromString(comidCreateProfile)
 		if err != nil {
 			return "", fmt.Errorf("error creating profile %q for template: %w", comidCreateProfile, err)
 		}

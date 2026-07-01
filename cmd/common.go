@@ -12,7 +12,6 @@ import (
 	"github.com/spf13/afero"
 	"github.com/veraison/corim/corim"
 	"github.com/veraison/corim/cots"
-	"github.com/veraison/eat"
 	"github.com/veraison/swid"
 )
 
@@ -68,7 +67,7 @@ func printJSONFromCBOR(fcl FromCBORLoader, cbor []byte, heading string) error {
 	return nil
 }
 
-func printComidWithExtensions(cbor []byte, profile *eat.Profile, heading string) error {
+func printComidWithExtensions(cbor []byte, profile *corim.Profile, heading string) error {
 	var (
 		err error
 		j   []byte
@@ -88,7 +87,7 @@ func printComidWithExtensions(cbor []byte, profile *eat.Profile, heading string)
 	return nil
 }
 
-func printComid(cbor []byte, profile *eat.Profile, heading string) error {
+func printComid(cbor []byte, profile *corim.Profile, heading string) error {
 	return printComidWithExtensions(cbor, profile, heading)
 }
 

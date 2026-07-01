@@ -23,6 +23,8 @@ In this document we describe how to use Corim Command Line Interface tool `cocli
 
 # Installing and configuring
 
+Building from source requires **Go 1.25** or newer (the `github.com/veraison/corim` dependency used by current `main` sets `go 1.25` in its module).
+
 To install the `cocli` command, do:
 ```
 $ go install github.com/veraison/cocli@latest
