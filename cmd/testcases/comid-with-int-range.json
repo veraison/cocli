@@ -1,0 +1,71 @@
+{
+  "lang": "en-GB",
+  "tag-identity": {
+    "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "version": 0
+  },
+  "entities": [
+    {
+      "name": "ACME Ltd.",
+      "regid": "https://acme.example",
+      "roles": ["tagCreator", "creator", "maintainer"]
+    }
+  ],
+  "triples": {
+    "reference-values": [
+      {
+        "environment": {
+          "class": {
+            "id": {
+              "type": "uuid",
+              "value": "DD6661F0-0928-4401-966B-589EA74E3272"
+            }
+          }
+        },
+        "measurements": [
+          {
+            "key": {
+              "type": "string",
+              "value": "int-range-single"
+            },
+            "value": {
+              "int-range": {
+                "type": "rawIntInteger",
+                "value": 42
+              }
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "int-range-bounded"
+            },
+            "value": {
+              "int-range": {
+                "type": "rawIntRange",
+                "value": {
+                  "min": 1,
+                  "max": 10
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "int-range-min-only"
+            },
+            "value": {
+              "int-range": {
+                "type": "rawIntRange",
+                "value": {
+                  "min": -5
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

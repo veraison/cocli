@@ -1,0 +1,51 @@
+{
+  "tag-identity": {
+    "id": "9C6BCB1D-8F0E-4C0E-9F3A-0F4B2A9C8E71"
+  },
+  "triples": {
+    "reference-values": [
+      {
+        "environment": {
+          "class": {
+            "id": {
+              "type": "uuid",
+              "value": "DD6661F0-0928-4401-966B-589EA74E3272"
+            },
+            "model": "FMC",
+            "layer": 0,
+            "index": 0
+          }
+        },
+        "measurements": [
+          {
+            "key": {
+              "type": "string",
+              "value": "security-version-number"
+            },
+            "value": {
+              "int-range": {
+                "type": "rawIntInteger",
+                "value": 42
+              }
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "acceptable-security-version-numbers"
+            },
+            "value": {
+              "int-range": {
+                "type": "rawIntRange",
+                "value": {
+                  "min": 1,
+                  "max": 10
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
