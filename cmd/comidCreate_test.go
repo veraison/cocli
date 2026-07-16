@@ -198,6 +198,58 @@ func Test_ComidCreateCmd_template_with_dependency_triples(t *testing.T) {
 	assert.NoError(t, dd[0].Valid())
 }
 
+func Test_ComidCreateCmd_template_with_int_range(t *testing.T) {
+	var err error
+
+	cmd := NewComidCreateCmd()
+
+	fs = afero.NewMemMapFs()
+	err = afero.WriteFile(fs, "comid-with-int-range.json", testIntRangeTemplate, 0644)
+	require.NoError(t, err)
+
+	cmd.SetArgs([]string{"--template=comid-with-int-range.json"})
+	err = cmd.Execute()
+	require.NoError(t, err)
+
+	cborData, err := afero.ReadFile(fs, "comid-with-int-range.cbor")
+	require.NoError(t, err)
+
+	var c comid.Comid
+	err = c.FromCBOR(cborData)
+	require.NoError(t, err)
+	require.NotNil(t, c.Triples.ReferenceValues)
+	require.Len(t, c.Triples.ReferenceValues.Values, 1)
+
+	measurements := c.Triples.ReferenceValues.Values[0].Measurements.Values
+	require.Len(t, measurements, 3)
+
+	// int-range-single: single rawIntInteger value
+	require.NotNil(t, measurements[0].Val.IntRange)
+	require.NoError(t, measurements[0].Val.IntRange.Valid())
+	single, ok := measurements[0].Val.IntRange.Value.(*comid.RawIntInteger)
+	require.True(t, ok)
+	assert.Equal(t, comid.RawIntInteger(42), *single)
+
+	// int-range-bounded: rawIntRange value with both min and max
+	require.NotNil(t, measurements[1].Val.IntRange)
+	require.NoError(t, measurements[1].Val.IntRange.Valid())
+	bounded, ok := measurements[1].Val.IntRange.Value.(*comid.TaggedRawIntRange)
+	require.True(t, ok)
+	require.NotNil(t, bounded.Min)
+	require.NotNil(t, bounded.Max)
+	assert.Equal(t, int64(1), *bounded.Min)
+	assert.Equal(t, int64(10), *bounded.Max)
+
+	// int-range-min-only: rawIntRange value with only min set (max is +inf)
+	require.NotNil(t, measurements[2].Val.IntRange)
+	require.NoError(t, measurements[2].Val.IntRange.Valid())
+	minOnly, ok := measurements[2].Val.IntRange.Value.(*comid.TaggedRawIntRange)
+	require.True(t, ok)
+	require.NotNil(t, minOnly.Min)
+	assert.Equal(t, int64(-5), *minOnly.Min)
+	assert.Nil(t, minOnly.Max)
+}
+
 // Test_ComidCreateCmd_template_with_invalid_dependency_triples checks that creation fails
 // when the template has invalid dependency-triples (e.g. empty trustees).
 func Test_ComidCreateCmd_template_with_invalid_dependency_triples(t *testing.T) {

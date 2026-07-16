@@ -89,4 +89,7 @@ var (
 
 	//go:embed testcases/comid-with-dependency-triples.json
 	testDependencyTriplesTemplate []byte
+
+	//go:embed testcases/comid-with-int-range.json
+	testIntRangeTemplate []byte
 )

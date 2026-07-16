@@ -42,7 +42,7 @@
               "cryptokeys": [
                 {
                   "type": "bytes",
-                  "value": "01234567890123456789012345678901"
+                  "value": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8="
                 }
               ]
             }
