@@ -10,7 +10,7 @@ MOCKGEN := $(shell go env GOPATH)/bin/mockgen
 INTERFACES := cmd/isubmitter.go
 MOCKPKG := mocks
 
-GOLINT ?= golangci-lint
+GOLINT ?= $(shell go env GOPATH)/bin/golangci-lint
 
 ifeq ($(MAKECMDGOALS),lint)
 GOLINT_ARGS ?= run --timeout=3m
