@@ -1,4 +1,4 @@
-// Copyright 2021-2025 Contributors to the Veraison project.
+// Copyright 2021-2026 Contributors to the Veraison project.
 // SPDX-License-Identifier: Apache-2.0
 
 package cmd
@@ -10,7 +10,6 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 	"github.com/veraison/corim/corim"
-	"github.com/veraison/eat"
 )
 
 var (
@@ -84,7 +83,7 @@ func validateComid(file string) error {
 	var (
 		data []byte
 		err  error
-		p    *eat.Profile
+		p    *corim.Profile
 	)
 
 	if data, err = afero.ReadFile(fs, file); err != nil {
@@ -92,7 +91,7 @@ func validateComid(file string) error {
 	}
 
 	if comidValidateProfile != "" {
-		p, err = eat.NewProfile(comidValidateProfile)
+		p, err = corim.NewProfileFromString(comidValidateProfile)
 		if err != nil {
 			return fmt.Errorf("error creating profile %q for CoMID: %w", comidValidateProfile, err)
 		}

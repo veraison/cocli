@@ -37,7 +37,7 @@
             "value": {
               "name": "BL",
               "digests": [
-                "sha-256:h0KPxSKAPTEGXnvOPPA/5HUJZjHl4Hu9eg/eYMTPJcc="
+                [1, "h0KPxSKAPTEGXnvOPPA_5HUJZjHl4Hu9eg_eYMTPJcc"]
               ],
               "cryptokeys": [
                 {
