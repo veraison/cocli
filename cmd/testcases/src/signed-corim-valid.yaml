@@ -75,7 +75,9 @@ value:
         - 1
         - !!binary |-
           5Fty9cDAtXLbTY06t+l/No/3TmI0eoJN7LZ6hOUiTXU=
-  3: tag:arm.com,2025:psa#1.0.0
+  3:
+    tag: 32
+    value: tag:arm.com,2025:psa#1.0.0
   4:
     0:
       tag: 1
