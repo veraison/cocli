@@ -456,13 +456,46 @@ $ cocli corim sign --file data/corim/corim-full.cbor \
 ### Verify
 
 Use the `corim verify` subcommand to cryptographically verify the signed CoRIM
-supplied via the `--file` switch (abbrev. `-f`).  The signature is checked
-using the key supplied via the `--key` switch (abbrev. `-k`), which is expected
-to be in [JWK](https://www.rfc-editor.org/rfc/rfc7517) format.  For example:
+supplied via the `--file` switch (abbrev. `-f`).
+
+Verification can use either a JWK public key (`--key`, abbrev. `-k`) or the X.509
+certificate chain in the COSE `x5chain` header. `--key` cannot be combined with
+`--trust-anchors` or `--crl`. If `--key` is used on a CoRIM that also carries an
+`x5chain` header, PKIX verification is skipped (a warning is printed to stderr).
+
+**Key-based verification:**
 ```
 $ cocli corim verify --file data/corim/signed-corim.cbor --key data/keys/ec-p256.jwk
 >> "signed-corim.cbor" verified
 ```
+
+**x5chain-based verification** — PKIX path validation against trusted anchors.
+The COSE `x5chain` header carries the signing certificate at `[0]` and optional
+intermediates at `[1..]`; the trust anchor is supplied via `--trust-anchors`, not
+embedded in the header. Produce a signed CoRIM with `corim sign` using `--cert`
+and `--intermediates` (intermediates must not include the trust anchor; see
+[Sign](#sign)). The unit tests in `cmd/corimVerify_x5chain_test.go` build fixtures
+from the Veraison test PKI in `github.com/veraison/corim/testdata`.
+
+When `--trust-anchors` is supplied (paths to DER or PEM files; may be repeated;
+a PEM file may bundle multiple certificates), only those anchors are trusted
+(override; no merge with system roots). When omitted, the OS trust store is used
+(**not recommended** for production CoRIM trust decisions; a warning is printed
+to stderr). `--crl` likewise takes paths to DER or PEM CRL files (PEM may contain
+multiple CRLs; repeatable).
+
+Test certificates ship under `cmd/testcases/test-certs/` (for example
+`rootCA.der`). Use a CoRIM that was signed with a matching leaf certificate and
+chain, not the key-only fixtures under `data/corim/`.
+```
+$ cocli corim verify --file signed-x5chain.cbor --trust-anchors cmd/testcases/test-certs/rootCA.der
+$ cocli corim verify --file signed-x5chain.cbor --trust-anchors cmd/testcases/test-certs/rootCA.der --crl issuer.crl
+$ cocli corim verify --file signed-x5chain.cbor --trust-anchors cmd/testcases/test-certs/rootCA.der --crl issuer.crl --crl-policy permissive
+```
+
+When `--crl` is supplied, `--crl-policy` selects `strict` (every in-chain issuer
+must have a valid matching CRL) or `permissive` (skip issuers with no matching CRL;
+expired CRLs are still rejected). `--crl-policy` without `--crl` is rejected.
 
 Verification can fail either because the cryptographic processing fails or
 because the signed payload or protected headers are themselves invalid.  For example:

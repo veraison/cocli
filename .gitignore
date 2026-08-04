@@ -1,2 +1,3 @@
+/cocli
 cmd/mocks
 cmd/output.cbor
