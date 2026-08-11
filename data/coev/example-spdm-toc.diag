@@ -1,0 +1,243 @@
+/ tagged-spdm-toc / 570({
+  / tagged-evidence / 0: [
+    / tagged-concise-evidence / 571({
+      / ce.ev-triples / 0: {
+        / ce.evidence-triples / 0: [
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a6403')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "BRP",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [3]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a6404')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "FFMC",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [4]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a6405')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "BCRC",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [5]
+                  }
+                }
+              },
+              {
+                / mkey / 0: "BCRD",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [7]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a6407')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "FLRC",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [6]
+                  }
+                }
+              },
+              {
+                / mkey / 0: "FLRD",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [11]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a6409')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "FUSE",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [13]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a640b')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "NVLC",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [8]
+                  }
+                }
+              },
+              {
+                / mkey / 0: "NVLD",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [12]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a640d')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "JTGS",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [18]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a640f')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "PDI",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [26]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a6410')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "BOOTS",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [43]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a6412')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "DBGS",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [51]
+                  }
+                }
+              }
+            ]
+          ],
+          [
+            / environment-map /
+            {
+              / class / 0: {
+                / class-id / 0 : 111(h'2b06010401ac478a1401010a010a6413')
+              }
+            },
+            / measurement-map array /
+            [
+              {
+                / mkey / 0: "DVID",
+                / mval / 1: {
+                  / spdm-indirect / 12: {
+                    / index / 0: [52]
+                  }
+                }
+              }
+            ]
+          ]
+        ]
+      }
+    })
+  ]
+})

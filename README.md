@@ -11,11 +11,14 @@ In this document we describe how to use Corim Command Line Interface tool `cocli
   * [CoTS Commands](#cotss-manipulation)
     * [Create](#create-1)
     * [Display](#display-1)
-  * [CoRIM Commands](#corims-manipulation)
+  * [CoEV Commands](#coevs-manipulation)
     * [Create](#create-2)
+    * [Display](#display-2)
+  * [CoRIM Commands](#corims-manipulation)
+    * [Create](#create-3)
     * [Sign](#sign)
     * [Verify](#verify)
-    * [Display](#display-2)
+    * [Display](#display-3)
     * [Extract](#extract-coswids-comids-and-cotss)
   * [CoRIM Submission](#corim-submission-to-veraison)
     * [Remote Authentication](#remote-service-authentication)
@@ -67,6 +70,8 @@ flowchart TD
     end
 
     subgraph COTSCMD["<b>COTS COMMANDS</b> \n cocli cots create \n cocli cots display"]
+    end
+    subgraph COEVCMD["<b>COEV COMMANDS</b> \n cocli coev create \n cocli coev display"]
     end
   end
  CORIM ---> CORIMCMD
@@ -368,6 +373,107 @@ which would output something like:
 
 Note: One of more files and directories can be supplied in the same invocation, using -f and -d directive:
 
+```
+
+## CoEVs manipulation
+
+The `coev` subcommand allows you to create and display Concise Evidence (CoEV)
+payloads.  Two payload types are supported:
+
+- **tagged-spdm-toc** (CBOR tag 570): a collection of Concise Evidence items
+  carrying SPDM indirect measurement references, represented in JSON as an
+  object with a `"tagged-evidence"` key.
+- **tagged-concise-evidence** (CBOR tag 571): a single standalone Concise
+  Evidence item.
+
+The format is inferred automatically from the JSON template on create, and from
+the CBOR tag on display.
+
+### Create
+
+Use the `coev create` subcommand to create a CBOR-encoded CoEV from a JSON
+template, passing the template via the `--template` switch (abbrev. `-t`):
+
+* Please inspect the JSON templates under `data/coev/templates/` as examples.
+
+```
+$ cocli coev create --template data/coev/templates/example-spdm-toc.json
+>> created "example-spdm-toc.cbor" from "data/coev/templates/example-spdm-toc.json"
+```
+
+A template whose root object contains a `"tagged-evidence"` key is encoded as a
+tagged-spdm-toc (tag 570).  Any other template is encoded as a
+tagged-concise-evidence (tag 571):
+
+```
+$ cocli coev create --template data/coev/templates/example-concise-evidence.json
+>> created "example-concise-evidence.cbor" from "data/coev/templates/example-concise-evidence.json"
+```
+
+The CBOR-encoded file is stored in the current working directory with a name
+derived from the template.  Use `--output-dir` (abbrev. `-o`) to write to a
+different directory:
+
+```
+$ cocli coev create --template data/coev/templates/example-spdm-toc.json --output-dir /tmp
+>> created "/tmp/example-spdm-toc.cbor" from "data/coev/templates/example-spdm-toc.json"
+```
+
+Multiple templates can be processed in one go using `--template-dir` (abbrev.
+`-T`), and the `-t` and `-T` switches can be freely combined:
+
+```
+$ cocli coev create --template-dir data/coev/templates/ --output-dir /tmp
+>> created "/tmp/example-concise-evidence.cbor" from "data/coev/templates/example-concise-evidence.json"
+>> created "/tmp/example-spdm-toc.cbor" from "data/coev/templates/example-spdm-toc.json"
+```
+
+### Display
+
+Use the `coev display` subcommand to print one or more CBOR-encoded CoEV
+payloads in human-readable (JSON) format.  Supply individual files with
+`--file` (abbrev. `-f`) or scan a directory with `--dir` (abbrev. `-d`).
+
+The CBOR tag is detected automatically:
+- tag 570, rendered as `{ "tagged-evidence": [ ... ] }`
+- tag 571 or untagged, rendered as a bare Concise Evidence object
+
+```
+$ cocli coev display --file data/coev/example-spdm-toc.cbor
+>> [data/coev/example-spdm-toc.cbor]
+{
+  "tagged-evidence": [
+    {
+      "ev-triples": {
+        "evidence-triples": [
+          {
+            "environment": { "class": { "id": { "type": "oid", "value": "1.3.6.1.4.1.5703..." } } },
+            "measurements": [ { "key": { "type": "string", "value": "BRP" }, "value": { "spdm-indirect": { "index": [3] } } } ]
+          },
+[...]
+        ]
+      }
+    }
+  ]
+}
+```
+
+```
+$ cocli coev display --file data/coev/example-concise-evidence.cbor
+>> [data/coev/example-concise-evidence.cbor]
+{
+  "ev-triples": {
+    "evidence-triples": [
+[...]
+    ]
+  }
+}
+```
+
+A directory can be scanned in one go:
+
+```
+$ cocli coev display --dir data/coev/
 ```
 
 ## CoSWID manipulation
