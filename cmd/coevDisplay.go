@@ -24,19 +24,27 @@ var coevDisplayCmd = NewCoevDisplayCmd()
 func NewCoevDisplayCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "display",
-		Short: "display one or more CBOR-encoded CoEV(s) in human readable (JSON) format",
-		Long: `display one or more CBOR-encoded CoEV(s) in human readable (JSON) format.
+		Short: "display one or more CBOR-encoded CoEV(s) / SPDM TOC(s) in human readable (JSON) format",
+		Long: `display one or more CBOR-encoded CoEV(s) / SPDM TOC(s) in human readable (JSON) format.
 
-	The format is auto-detected from the CBOR tag:
-	  CBOR tag 570: tagged-spdm-toc
-	  CBOR tag 571: tagged-concise-evidence
-	  No tag: untagged concise-evidence
+	The accepted file type depends on how the parent command was invoked:
 
-	Display CoEV in file e.cbor.
+	  cocli coev display      accepts tagged-concise-evidence (CBOR tag 571) or
+	                          untagged concise-evidence files.
+
+	  cocli spdm-toc display  accepts tagged-spdm-toc (CBOR tag 570) files only.
+
+	Files of the wrong type are rejected with an error.
+
+	Display a concise-evidence file.
 
 	  cocli coev display --file=e.cbor
 
-	Display CoEVs in files e1.cbor, e2.cbor and any cbor file in the coevs/ directory.
+	Display an SPDM-TOC file.
+
+	  cocli spdm-toc display --file=e.cbor
+
+	Display files e1.cbor, e2.cbor and any .cbor file in the coevs/ directory.
 
 	  cocli coev display --file=e1.cbor --file=e2.cbor --dir=coevs
 `,
@@ -90,7 +98,7 @@ func displayCoevFile(file string) error {
 		return fmt.Errorf("error loading CoEV from %s: %w", file, err)
 	}
 
-	j, err := coevCBORToJSON(data)
+	j, err := coevCBORToJSON(data, coevCurrentKind)
 	if err != nil {
 		return err
 	}
@@ -98,11 +106,20 @@ func displayCoevFile(file string) error {
 	return printCoevJSON(j, ">> ["+file+"]")
 }
 
-// coevCBORToJSON decodes a CBOR CoEV payload to JSON, auto-detecting the format
-// from the leading CBOR tag (570 = tagged-spdm-toc, 571 = tagged-concise-evidence,
-// untagged = bare concise-evidence).
-func coevCBORToJSON(data []byte) ([]byte, error) {
-	if bytes.HasPrefix(data, coev.SpdmTocTag) {
+// coevCBORToJSON decodes a CBOR CoEV payload to JSON.
+// kind enforces the expected payload type: coevKindSpdmToc requires CBOR tag 570;
+// coevKindConciseEvidence requires tag 571 or an untagged concise-evidence.
+func coevCBORToJSON(data []byte, kind coevKind) ([]byte, error) {
+	isSpdmToc := bytes.HasPrefix(data, coev.SpdmTocTag)
+
+	if kind == coevKindSpdmToc && !isSpdmToc {
+		return nil, errors.New("not an SPDM-TOC payload")
+	}
+	if kind == coevKindConciseEvidence && isSpdmToc {
+		return nil, errors.New("not a concise-evidence payload")
+	}
+
+	if isSpdmToc {
 		var toc coev.TaggedSpdmToc
 		if err := toc.FromCBOR(data); err != nil {
 			return nil, fmt.Errorf("decoding SPDM-TOC: %w", err)

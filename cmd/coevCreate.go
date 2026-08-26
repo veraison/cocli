@@ -24,24 +24,32 @@ var coevCreateCmd = NewCoevCreateCmd()
 func NewCoevCreateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
-		Short: "create one or more CBOR-encoded CoEV(s) from the supplied JSON template(s)",
-		Long: `create one or more CBOR-encoded CoEV(s) from the supplied JSON template(s)
+		Short: "create one or more CBOR-encoded CoEV(s) / SPDM TOC(s) from the supplied JSON template(s)",
+		Long: `create one or more CBOR-encoded CoEV(s) / SPDM TOC(s) from the supplied JSON template(s)
 
-	A template containing a "tagged-evidence" key is encoded as a tagged-spdm-toc
-	(CBOR tag 570). Any other template is encoded as a tagged-concise-evidence
-	(CBOR tag 571).
+	The accepted template type depends on how the parent command was invoked:
 
-	Create a CoEV from template t1.json and save it to the current directory.
+	  cocli coev create      accepts concise-evidence templates
+
+	  cocli spdm-toc create  accepts SPDM-TOC templates
+
+	Templates of the wrong type are rejected with an error.
+
+	Create a concise-evidence payload from template t1.json.
 
 	  cocli coev create --template=t1.json
 
-	Create CoEVs from templates t1.json and t2.json, plus any template found in
-	the templates/ directory. Save them to the coevs/ directory.
+	Create an SPDM-TOC payload from template t1.json.
+
+	  cocli spdm-toc create --template=t1.json
+
+	Create concise-evidence payloads from templates t1.json and t2.json, plus any template found in
+	the templates/ directory. Save them to the out/ directory.
 
 	  cocli coev create --template=t1.json \
 	                    --template=t2.json \
 	                    --template-dir=templates \
-	                    --output-dir=coevs
+	                    --output-dir=out
 
 	Note: output file names are derived from template file names, so all template
 	file names (even from different directories) MUST be different.
@@ -58,7 +66,7 @@ func NewCoevCreateCmd() *cobra.Command {
 
 			errs := 0
 			for _, tmplFile := range files {
-				cborFile, err := coevTemplateToCBOR(tmplFile, coevCreateOutputDir)
+				cborFile, err := coevTemplateToCBOR(tmplFile, coevCreateOutputDir, coevCurrentKind)
 				if err != nil {
 					fmt.Printf(">> creation failed for %q: %v\n", tmplFile, err)
 					errs++
@@ -96,10 +104,10 @@ func checkCoevCreateArgs() error {
 	return nil
 }
 
-// coevTemplateToCBOR encodes a JSON CoEV template to CBOR.
-// Templates with a "tagged-evidence" key are encoded as tagged-spdm-toc
-// (tag 570); all others are encoded as tagged-concise-evidence (tag 571).
-func coevTemplateToCBOR(tmplFile, outputDir string) (string, error) {
+// coevTemplateToCBOR encodes a JSON CoEV template to CBOR.  kind controls which
+// payload type is accepted: coevKindSpdmToc requires a SPDM TOC template,
+// coevKindConciseEvidence requires a CoEV template.
+func coevTemplateToCBOR(tmplFile, outputDir string, kind coevKind) (string, error) {
 	tmplData, err := afero.ReadFile(fs, tmplFile)
 	if err != nil {
 		return "", fmt.Errorf("error loading template from %s: %w", tmplFile, err)
@@ -112,6 +120,13 @@ func coevTemplateToCBOR(tmplFile, outputDir string) (string, error) {
 	}
 	if err := json.Unmarshal(tmplData, &probe); err != nil {
 		return "", fmt.Errorf("error parsing template %s: %w", tmplFile, err)
+	}
+
+	if kind == coevKindSpdmToc && probe.TaggedEvidence == nil {
+		return "", fmt.Errorf("%s is not an SPDM-TOC template", tmplFile)
+	}
+	if kind == coevKindConciseEvidence && probe.TaggedEvidence != nil {
+		return "", fmt.Errorf("%s is not a concise-evidence template", tmplFile)
 	}
 
 	if probe.TaggedEvidence != nil {

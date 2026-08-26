@@ -39,6 +39,9 @@ func Test_CoevCreateCmd_no_files_found(t *testing.T) {
 }
 
 func Test_CoevCreateCmd_spdm_toc_from_file(t *testing.T) {
+	coevCurrentKind = coevKindSpdmToc
+	t.Cleanup(func() { coevCurrentKind = coevKindConciseEvidence })
+
 	cmd := NewCoevCreateCmd()
 	fs = afero.NewMemMapFs()
 	require.NoError(t, afero.WriteFile(fs, "spdm-toc.json", testSpdmTocTemplate, 0644))
@@ -65,6 +68,9 @@ func Test_CoevCreateCmd_standalone_ce_from_file(t *testing.T) {
 }
 
 func Test_CoevCreateCmd_output_dir(t *testing.T) {
+	coevCurrentKind = coevKindSpdmToc
+	t.Cleanup(func() { coevCurrentKind = coevKindConciseEvidence })
+
 	cmd := NewCoevCreateCmd()
 	fs = afero.NewMemMapFs()
 	require.NoError(t, afero.WriteFile(fs, "spdm-toc.json", testSpdmTocTemplate, 0644))
@@ -78,12 +84,14 @@ func Test_CoevCreateCmd_output_dir(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func Test_CoevCreateCmd_from_dir(t *testing.T) {
+func Test_CoevCreateCmd_spdm_toc_from_dir(t *testing.T) {
+	coevCurrentKind = coevKindSpdmToc
+	t.Cleanup(func() { coevCurrentKind = coevKindConciseEvidence })
+
 	cmd := NewCoevCreateCmd()
 	fs = afero.NewMemMapFs()
 	require.NoError(t, fs.MkdirAll("templates", 0755))
 	require.NoError(t, afero.WriteFile(fs, "templates/t1.json", testSpdmTocTemplate, 0644))
-	require.NoError(t, afero.WriteFile(fs, "templates/t2.json", testCoevTemplate, 0644))
 
 	cmd.SetArgs([]string{"--template-dir=templates"})
 	err := cmd.Execute()
@@ -91,8 +99,43 @@ func Test_CoevCreateCmd_from_dir(t *testing.T) {
 
 	_, err = fs.Stat("t1.cbor")
 	assert.NoError(t, err)
-	_, err = fs.Stat("t2.cbor")
+}
+
+func Test_CoevCreateCmd_ce_from_dir(t *testing.T) {
+	cmd := NewCoevCreateCmd()
+	fs = afero.NewMemMapFs()
+	require.NoError(t, fs.MkdirAll("templates", 0755))
+	require.NoError(t, afero.WriteFile(fs, "templates/t1.json", testCoevTemplate, 0644))
+
+	cmd.SetArgs([]string{"--template-dir=templates"})
+	err := cmd.Execute()
 	assert.NoError(t, err)
+
+	_, err = fs.Stat("t1.cbor")
+	assert.NoError(t, err)
+}
+
+func Test_CoevCreateCmd_spdm_toc_mode_rejects_ce_template(t *testing.T) {
+	coevCurrentKind = coevKindSpdmToc
+	t.Cleanup(func() { coevCurrentKind = coevKindConciseEvidence })
+
+	cmd := NewCoevCreateCmd()
+	fs = afero.NewMemMapFs()
+	require.NoError(t, afero.WriteFile(fs, "ce.json", testCoevTemplate, 0644))
+
+	cmd.SetArgs([]string{"--template=ce.json"})
+	err := cmd.Execute()
+	assert.EqualError(t, err, "1/1 creation(s) failed")
+}
+
+func Test_CoevCreateCmd_ce_mode_rejects_spdm_toc_template(t *testing.T) {
+	cmd := NewCoevCreateCmd()
+	fs = afero.NewMemMapFs()
+	require.NoError(t, afero.WriteFile(fs, "spdm-toc.json", testSpdmTocTemplate, 0644))
+
+	cmd.SetArgs([]string{"--template=spdm-toc.json"})
+	err := cmd.Execute()
+	assert.EqualError(t, err, "1/1 creation(s) failed")
 }
 
 func Test_CoevCreateCmd_invalid_json(t *testing.T) {
@@ -106,6 +149,9 @@ func Test_CoevCreateCmd_invalid_json(t *testing.T) {
 }
 
 func Test_CoevCreateCmd_invalid_spdm_toc_content(t *testing.T) {
+	coevCurrentKind = coevKindSpdmToc
+	t.Cleanup(func() { coevCurrentKind = coevKindConciseEvidence })
+
 	cmd := NewCoevCreateCmd()
 	fs = afero.NewMemMapFs()
 	// tagged-evidence present but CE is empty — validation will fail

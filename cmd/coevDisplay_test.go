@@ -40,6 +40,9 @@ func Test_CoevDisplayCmd_no_files_found(t *testing.T) {
 }
 
 func Test_CoevDisplayCmd_spdm_toc_file(t *testing.T) {
+	coevCurrentKind = coevKindSpdmToc
+	t.Cleanup(func() { coevCurrentKind = coevKindConciseEvidence })
+
 	cmd := NewCoevDisplayCmd()
 	fs = afero.NewMemMapFs()
 	require.NoError(t, afero.WriteFile(fs, "spdm-toc.cbor", testSpdmTocCBOR, 0644))
@@ -77,7 +80,33 @@ func Test_CoevDisplayCmd_untagged_ce_file(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func Test_CoevDisplayCmd_spdm_toc_mode_rejects_ce_file(t *testing.T) {
+	coevCurrentKind = coevKindSpdmToc
+	t.Cleanup(func() { coevCurrentKind = coevKindConciseEvidence })
+
+	cmd := NewCoevDisplayCmd()
+	fs = afero.NewMemMapFs()
+	require.NoError(t, afero.WriteFile(fs, "ce.cbor", testCoevCBOR, 0644))
+
+	cmd.SetArgs([]string{"--file=ce.cbor"})
+	err := cmd.Execute()
+	assert.EqualError(t, err, "1/1 display(s) failed")
+}
+
+func Test_CoevDisplayCmd_ce_mode_rejects_spdm_toc_file(t *testing.T) {
+	cmd := NewCoevDisplayCmd()
+	fs = afero.NewMemMapFs()
+	require.NoError(t, afero.WriteFile(fs, "spdm-toc.cbor", testSpdmTocCBOR, 0644))
+
+	cmd.SetArgs([]string{"--file=spdm-toc.cbor"})
+	err := cmd.Execute()
+	assert.EqualError(t, err, "1/1 display(s) failed")
+}
+
 func Test_CoevDisplayCmd_from_dir(t *testing.T) {
+	coevCurrentKind = coevKindSpdmToc
+	t.Cleanup(func() { coevCurrentKind = coevKindConciseEvidence })
+
 	cmd := NewCoevDisplayCmd()
 	fs = afero.NewMemMapFs()
 	require.NoError(t, fs.MkdirAll("coevs", 0755))
@@ -99,6 +128,9 @@ func Test_CoevDisplayCmd_invalid_cbor(t *testing.T) {
 }
 
 func Test_CoevDisplayCmd_multiple_files_partial_failure(t *testing.T) {
+	coevCurrentKind = coevKindSpdmToc
+	t.Cleanup(func() { coevCurrentKind = coevKindConciseEvidence })
+
 	cmd := NewCoevDisplayCmd()
 	fs = afero.NewMemMapFs()
 	require.NoError(t, afero.WriteFile(fs, "good.cbor", testSpdmTocCBOR, 0644))
