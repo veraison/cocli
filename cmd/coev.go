@@ -10,8 +10,9 @@ import (
 )
 
 var coevCmd = &cobra.Command{
-	Use:   "coev",
-	Short: "CoEV manipulation",
+	Use:     "coev",
+	Aliases: []string{"spdm-toc"},
+	Short:   "CoEV / SPDM-TOC manipulation",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
