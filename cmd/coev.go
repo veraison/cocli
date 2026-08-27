@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -20,17 +21,30 @@ const (
 // alias used to invoke the command. Tests may set it directly.
 var coevCurrentKind = coevKindConciseEvidence
 
+// coevKindFromOSArgs returns the payload kind by inspecting the first
+// positional argument in os.Args (skipping any leading flags). This is
+// a workaround because Cobra v1.2.1 only sets CalledAs() on the leaf command,
+// so cmd.Parent().CalledAs() is always empty for intermediate commands.
+func coevKindFromOSArgs() coevKind {
+	for _, arg := range os.Args[1:] {
+		if strings.HasPrefix(arg, "-") {
+			continue
+		}
+		if arg == "spdm-toc" {
+			return coevKindSpdmToc
+		}
+		return coevKindConciseEvidence
+	}
+	return coevKindConciseEvidence
+}
+
 var coevCmd = &cobra.Command{
 	Use:     "coev",
 	Aliases: []string{"spdm-toc"},
 	Short:   "CoEV / SPDM-TOC manipulation",
 
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		if cmd.Parent() != nil && cmd.Parent().CalledAs() == "spdm-toc" {
-			coevCurrentKind = coevKindSpdmToc
-		} else {
-			coevCurrentKind = coevKindConciseEvidence
-		}
+		coevCurrentKind = coevKindFromOSArgs()
 	},
 
 	Run: func(cmd *cobra.Command, args []string) {
