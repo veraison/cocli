@@ -113,6 +113,9 @@ func display(corimFile string, showTags bool) error {
 		return fmt.Errorf("error loading CoRIM from %s: %w", corimFile, err)
 	}
 
+	// strip ASN header bytes if present (d9 01 f4 d9 01 f6)
+	corimCBOR = stripASNHeaderBytes(corimCBOR)
+
 	// try to decode as a signed CoRIM
 	var s corim.SignedCorim
 	if err = s.FromCOSE(corimCBOR); err == nil {
