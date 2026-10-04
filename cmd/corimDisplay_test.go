@@ -13,7 +13,7 @@ import (
 
 // Define your truncated CBOR payload
 var truncatedCorim = []byte{
-	0xD9, 0x01, 0xF5,   // tag(501) [unsigned-corim-map]
+	0xD9, 0x01, 0xF5, // tag(501) [unsigned-corim-map]
 	0xA1,               // CBOR map with 1 key
 	0x01,               // Key = 1
 	0x65,               // Value: string of length 5

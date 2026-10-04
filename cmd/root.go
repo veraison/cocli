@@ -85,9 +85,9 @@ func initConfig() {
 }
 
 func readConfig(path string) (*viper.Viper, error) {
-	// We want to make sure that tests run in a controlled enviroment and
+	// We want to make sure that tests run in a controlled environment and
 	// can't be influenced by user's config file (if it exits) or user-set
-	// enviroment variables.
+	// environment variables.
 	insideTest := strings.HasSuffix(os.Args[0], ".test")
 
 	v := viper.GetViper()

@@ -18,6 +18,7 @@ var (
 
 var cotsDisplayCmd = NewCotsDisplayCmd()
 
+//nolint:dupl
 func NewCotsDisplayCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "display",
