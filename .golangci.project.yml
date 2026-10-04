@@ -1,0 +1,6 @@
+linters:
+  settings:
+    goconst:
+      ignore-string-values:
+        - 'create'
+        - 'display'
