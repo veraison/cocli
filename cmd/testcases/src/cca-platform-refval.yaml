@@ -47,7 +47,7 @@
                 cmF3dmFsdWUKcmF3dmFsdWUK
             5: !!binary |-
               cmF3dmFsdWUKcmF3dmFsdWUK
-        - 0: cca.platform-manufacturing-config
+        - 0: "cca.platform-manufacturing-config"
           1:
             4: !cbor/tag
               tag: 560
@@ -55,18 +55,18 @@
                 EBA=
             5: !!binary |
               //8=
-      - 0: cca.rotpk.CM.0.3
+      - 0: "cca.rotpk.CM.0.3"
         1:
           13:
-          - !cbor/tag
+          - 
             tag: 560
             value: !!binary |
               U3h5YwdTXfPsjYsVouLcVkFBnD0wYM/jIjjA+pc/eqM=
-          - !cbor/tag
+          - 
             tag: 560
             value: !!binary |
               2sRqWEFdw6ANenQYUgCOnK5k9S0DufdtdvSzZE/vxBY=
-          - !cbor/tag
+          - 
             tag: 560
             value: !!binary |
               aOZWslHmfoNYvvhIOrDVHGYZ8+ehqfDnWDjUH/No9yg=

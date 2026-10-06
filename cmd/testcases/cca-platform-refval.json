@@ -37,7 +37,10 @@
             "value": {
               "name": "BL",
               "digests": [
-                [1, "h0KPxSKAPTEGXnvOPPA_5HUJZjHl4Hu9eg_eYMTPJcc"]
+                [
+                  1,
+                  "h0KPxSKAPTEGXnvOPPA_5HUJZjHl4Hu9eg_eYMTPJcc"
+                ]
               ],
               "cryptokeys": [
                 {
@@ -59,10 +62,44 @@
               },
               "raw-value-mask": "cmF3dmFsdWUKcmF3dmFsdWUK"
             }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.platform-manufacturing-config"
+            },
+            "value": {
+              "raw-value": {
+                "type": "bytes",
+                "value": "EBA="
+              },
+              "raw-value-mask": "//8="
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.rotpk.CM.0.3"
+            },
+            "value": {
+              "cryptokeys": [
+                {
+                  "type": "bytes",
+                  "value": "U3h5YwdTXfPsjYsVouLcVkFBnD0wYM/jIjjA+pc/eqM="
+                },
+                {
+                  "type": "bytes",
+                  "value": "2sRqWEFdw6ANenQYUgCOnK5k9S0DufdtdvSzZE/vxBY="
+                },
+                {
+                  "type": "bytes",
+                  "value": "aOZWslHmfoNYvvhIOrDVHGYZ8+ehqfDnWDjUH/No9yg="
+                }
+              ]
+            }
           }
         ]
       }
     ]
   }
 }
-
