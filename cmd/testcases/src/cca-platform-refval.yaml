@@ -55,15 +55,18 @@
                 EBA=
             5: !!binary |
               //8=
-        - 0: cca.rotpk.cm.0.3
-          1:
-            13:
-              tag: 560
-              value: !!binary |
-                U3h5YwdTXfPsjYsVouLcVkFBnD0wYM/jIjjA+pc/eqM=
-              tag: 560
-              value: !!binary |
-                2sRqWEFdw6ANenQYUgCOnK5k9S0DufdtdvSzZE/vxBY=
-              tag: 560
-              value: !!binary |
-                aOZWslHmfoNYvvhIOrDVHGYZ8+ehqfDnWDjUH/No9yg=
+      - 0: cca.rotpk.CM.0.3
+        1:
+          13:
+          - !cbor/tag
+            tag: 560
+            value: !!binary |
+              U3h5YwdTXfPsjYsVouLcVkFBnD0wYM/jIjjA+pc/eqM=
+          - !cbor/tag
+            tag: 560
+            value: !!binary |
+              2sRqWEFdw6ANenQYUgCOnK5k9S0DufdtdvSzZE/vxBY=
+          - !cbor/tag
+            tag: 560
+            value: !!binary |
+              aOZWslHmfoNYvvhIOrDVHGYZ8+ehqfDnWDjUH/No9yg=
