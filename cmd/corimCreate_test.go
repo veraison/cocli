@@ -117,7 +117,7 @@ func Test_CorimCreateCmd_with_a_bad_comid(t *testing.T) {
 	cmd.SetArgs(args)
 
 	err = cmd.Execute()
-	assert.EqualError(t, err, `error loading CoMID from bad-comid.cbor: expected map (CBOR Major Type 5), found Major Type 7`)
+	assert.EqualError(t, err, `error loading CoMID from bad-comid.cbor: malformed CBOR: cbor: unexpected "break" code`)
 }
 
 func Test_CorimCreateCmd_with_an_invalid_comid(t *testing.T) {

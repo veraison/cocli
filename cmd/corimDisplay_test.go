@@ -13,7 +13,7 @@ import (
 
 // Define your truncated CBOR payload
 var truncatedCorim = []byte{
-	0xD9, 0x01, 0xF5,   // tag(501) [unsigned-corim-map]
+	0xD9, 0x01, 0xF5, // tag(501) [unsigned-corim-map]
 	0xA1,               // CBOR map with 1 key
 	0x01,               // Key = 1
 	0x65,               // Value: string of length 5
@@ -89,7 +89,7 @@ func Test_CorimDisplayCmd_invalid_signed_corim_Truncated(t *testing.T) {
 	assert.EqualError(
 		t,
 		err,
-		"error decoding CoRIM (signed or unsigned) from truncated.cbor: map item 0: could not unmarshal value: unexpected EOF",
+		"error decoding CoRIM (signed or unsigned) from truncated.cbor: malformed CBOR: unexpected EOF",
 	)
 }
 

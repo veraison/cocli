@@ -35,16 +35,16 @@
               "value": "cca.software-component"
             },
             "value": {
-              "name": "BL",
-              "digests": [
-                "sha-256:h0KPxSKAPTEGXnvOPPA/5HUJZjHl4Hu9eg/eYMTPJcc="
-              ],
               "cryptokeys": [
                 {
                   "type": "bytes",
-                  "value": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8="
+                  "value": "U3h5YwdTXfPsjYsVouLcVkFBnD0wYM/jIjjA+pc/eqM="
                 }
-              ]
+              ],
+              "digests": [
+                [1, "BwYFBAMCAQAPDg0MCwoJCBcWFRQTEhEQHx4dHBsaGRg"]
+              ],
+              "name": "BL"
             }
           },
           {
@@ -54,10 +54,49 @@
             },
             "value": {
               "raw-value": {
-                "type": "bytes",
-                "value": "cmF3dmFsdWUKcmF3dmFsdWUK"
-              },
-              "raw-value-mask": "cmF3dmFsdWUKcmF3dmFsdWUK"
+                "type": "masked",
+                "value": {
+                  "value":"AQID",
+                  "mask": "BAUG"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.platform-manufacturing-config"
+            },
+            "value": {
+              "raw-value": {
+                "type": "masked",
+                "value": {
+                  "value":"EBA=",
+                  "mask": "//8="
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.rotpk.CM.0.3"
+            },
+            "value": {
+              "cryptokeys": [
+                {
+                  "type": "bytes",
+                  "value": "U3h5YwdTXfPsjYsVouLcVkFBnD0wYM/jIjjA+pc/eqM="
+                },
+                {
+                  "type": "bytes",
+                  "value": "2sRqWEFdw6ANenQYUgCOnK5k9S0DufdtdvSzZE/vxBY="
+                }, 
+                {
+                  "type": "bytes",
+                  "value":  "aOZWslHmfoNYvvhIOrDVHGYZ8+ehqfDnWDjUH/No9yg="
+                }
+              ]
             }
           }
         ]
