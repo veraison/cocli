@@ -57,10 +57,12 @@
             },
             "value": {
               "raw-value": {
-                "type": "bytes",
-                "value": "cmF3dmFsdWUKcmF3dmFsdWUK"
-              },
-              "raw-value-mask": "cmF3dmFsdWUKcmF3dmFsdWUK"
+                "type": "masked",
+                "value": {
+                  "value":"AQID",
+                  "mask": "BAUG"
+                }
+              }
             }
           },
           {
@@ -70,10 +72,12 @@
             },
             "value": {
               "raw-value": {
-                "type": "bytes",
-                "value": "EBA="
-              },
-              "raw-value-mask": "//8="
+                "type": "masked",
+                "value": {
+                  "value":"EBA=",
+                  "mask": "//8="
+                }
+              }
             }
           },
           {
