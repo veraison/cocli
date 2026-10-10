@@ -80,7 +80,7 @@
           {
             "key": {
               "type": "string",
-              "value": "cca.rotpk.CM.0.3"
+              "value": "cca.rotpk.CM.3"
             },
             "value": {
               "cryptokeys": [
