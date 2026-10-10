@@ -57,7 +57,7 @@
                   EBA=
                 - !!binary |
                   //8=
-        - 0: "cca.rotpk.CM.0.3"
+        - 0: "cca.rotpk.CM.3"
           1:
             13:
               - tag: 560
