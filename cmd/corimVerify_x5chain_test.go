@@ -506,21 +506,22 @@ func Test_CorimVerifyCmd_key_skips_x5chain_warning(t *testing.T) {
 func mustECPrivateKeyJWK(t *testing.T, key *ecdsa.PrivateKey) []byte {
 	t.Helper()
 
-	pad32 := func(b []byte) []byte {
-		if len(b) > 32 {
-			t.Fatalf("pad32: %d bytes exceeds 32", len(b))
-		}
-		out := make([]byte, 32)
-		copy(out[32-len(b):], b)
-		return out
+	privBytes, err := key.Bytes()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	pubBytes, err := key.PublicKey.Bytes()
+	if err != nil {
+		t.Fatal(err)
 	}
 
 	jwk := map[string]string{
 		"kty": "EC",
 		"crv": "P-256",
-		"x":   base64.RawURLEncoding.EncodeToString(pad32(key.X.Bytes())),
-		"y":   base64.RawURLEncoding.EncodeToString(pad32(key.Y.Bytes())),
-		"d":   base64.RawURLEncoding.EncodeToString(pad32(key.D.Bytes())),
+		"x":   base64.RawURLEncoding.EncodeToString(pubBytes[1:33]),
+		"y":   base64.RawURLEncoding.EncodeToString(pubBytes[33:65]),
+		"d":   base64.RawURLEncoding.EncodeToString(privBytes),
 	}
 
 	out, err := json.Marshal(jwk)
@@ -669,7 +670,7 @@ func (f x5chainPKIFixture) crlWithRevokedLeaf(t *testing.T) []byte {
 	return crlDER
 }
 
-func buildUnrelatedCRL(t *testing.T) (*x509.Certificate, []byte) {
+func buildUnrelatedCRL(t *testing.T) (*x509.Certificate, []byte) { //nolint:gocritic // unnamedResult: its a test
 	t.Helper()
 
 	unrelatedKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)

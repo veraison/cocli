@@ -49,7 +49,7 @@ var coevCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cmd.Help() // nolint: errcheck
+			cmd.Help() // nolint:errcheck,gosec
 			os.Exit(0)
 		}
 	},

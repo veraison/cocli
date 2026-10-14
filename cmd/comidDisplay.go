@@ -20,6 +20,7 @@ var (
 
 var comidDisplayCmd = NewComidDisplayCmd()
 
+//nolint:dupl
 func NewComidDisplayCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "display",

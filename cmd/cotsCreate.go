@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"slices"
 
 	"github.com/google/uuid"
 	"github.com/spf13/afero"
@@ -33,6 +34,7 @@ var (
 
 var cotsCreateCtsCmd = NewCotsCreateCtsCmd()
 
+//nolint:lll
 func NewCotsCreateCtsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create",
@@ -74,7 +76,7 @@ func NewCotsCreateCtsCmd() *cobra.Command {
 			certFilesList := filesList(cotsCreateCtsTaFiles, cotsCreateCtsTaDirs, ".der")
 			taiFilesList := filesList(cotsCreateCtsTaFiles, cotsCreateCtsTaDirs, ".ta")
 			spkiFilesList := filesList(cotsCreateCtsTaFiles, cotsCreateCtsTaDirs, ".spki")
-			tasFilesList := append(certFilesList, taiFilesList...)
+			tasFilesList := slices.Concat(certFilesList, taiFilesList, spkiFilesList)
 			tasFilesList = append(tasFilesList, spkiFilesList...)
 			casFilesList := filesList(cotsCreateCtsCaFiles, cotsCreateCtsCaDirs, ".der")
 
@@ -135,7 +137,9 @@ func checkctsCreateCtsArgs() error {
 		return errors.New("no environment template supplied")
 	}
 
-	if (*cotsCreateTagUUID && *cotsCreateTagID != "") || (*cotsCreateTagUUID && *cotsCreateTagUUIDStr != "") || (*cotsCreateTagUUIDStr != "" && *cotsCreateTagID != "") {
+	if (*cotsCreateTagUUID && *cotsCreateTagID != "") ||
+		(*cotsCreateTagUUID && *cotsCreateTagUUIDStr != "") ||
+		(*cotsCreateTagUUIDStr != "" && *cotsCreateTagID != "") {
 		return errors.New("only one of --uuid, --uuid-str and --id can be used at the same time")
 	}
 
@@ -150,7 +154,7 @@ func checkctsCreateCtsArgs() error {
 	return nil
 }
 
-func ctsTemplateToCBOR(language string, tagID string, genUUID bool, uuidStr string, version *uint, envFile string, permClaimsFile string, exclClaimsFile string, purposes, taFiles, caFiles []string, outputFile *string) (string, error) {
+func ctsTemplateToCBOR(language string, tagID string, genUUID bool, uuidStr string, version *uint, envFile string, permClaimsFile string, exclClaimsFile string, purposes, taFiles, caFiles []string, outputFile *string) (string, error) { //nolint:lll
 	var (
 		envData        []byte
 		env            cots.EnvironmentGroups
