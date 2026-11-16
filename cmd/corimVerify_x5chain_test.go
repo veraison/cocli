@@ -171,7 +171,7 @@ func Test_CorimVerifyCmd_x5chain_wrong_trust_anchor_fails(t *testing.T) {
 	})
 
 	err := cmd.Execute()
-	assert.ErrorContains(t, err, "x5chain verification failed")
+	assert.ErrorIs(t, err, corim.ErrX5ChainNoTrust)
 }
 
 func Test_CorimVerifyCmd_x5chain_non_existent_trust_anchor_file(t *testing.T) {
@@ -223,7 +223,7 @@ func Test_CorimVerifyCmd_x5chain_with_crl_rejects_revoked(t *testing.T) {
 	})
 
 	err := cmd.Execute()
-	assert.ErrorContains(t, err, "revoked")
+	assert.ErrorIs(t, err, corim.ErrX5ChainRevoked)
 }
 
 func Test_CorimVerifyCmd_x5chain_expired_crl_fails(t *testing.T) {
@@ -365,7 +365,7 @@ func Test_CorimVerifyCmd_x5chain_strict_crl_missing_issuer_fails(t *testing.T) {
 	})
 
 	err := cmd.Execute()
-	assert.ErrorContains(t, err, "unable to get certificate CRL")
+	assert.ErrorIs(t, err, corim.ErrX5ChainCRLMissing)
 }
 
 func Test_CorimVerifyCmd_x5chain_permissive_crl_skips_missing_issuer(t *testing.T) {
@@ -419,6 +419,19 @@ func Test_CorimVerifyCmd_x5chain_multiple_trust_anchors_ok(t *testing.T) {
 		"--trust-anchors=unrelated.der",
 		"--trust-anchors=anchor.der",
 	})
+
+	assert.NoError(t, cmd.Execute())
+}
+
+func Test_CorimVerifyCmd_x5chain_pem_trust_anchor_bundle_ok(t *testing.T) {
+	cmd := NewCorimVerifyCmd()
+	unrelatedPEM := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: testUnrelatedTrustAnchor(t)})
+	rootPEM := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: testdata.RootCA})
+
+	fs = afero.NewMemMapFs()
+	require.NoError(t, afero.WriteFile(fs, "signed.cbor", testSignedCorimWithX5ChainCBOR(t), 0644))
+	require.NoError(t, afero.WriteFile(fs, "anchors.pem", append(unrelatedPEM, rootPEM...), 0644))
+	cmd.SetArgs([]string{"--file=signed.cbor", "--trust-anchors=anchors.pem"})
 
 	assert.NoError(t, cmd.Execute())
 }
