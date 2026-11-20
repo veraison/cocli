@@ -1,0 +1,92 @@
+# Lint rules for Arm CCA Realm Endorsements, from
+# draft-ydb-rats-cca-endorsements-04, section 3.2.
+#
+# Apply to a CoMID template, or to a CoRIM template (for the profile rule).
+# Rules are written against the cocli JSON template syntax.
+rules:
+  - id: cca-realm-profile
+    description: 3.2.1 - the profile MUST be tag:arm.com,2025:endorsements/cca_realm#1.0.0
+    message: the CoRIM profile must be tag:arm.com,2025:endorsements/cca_realm#1.0.0
+    given: $['profile']
+    then:
+      equals: 'tag:arm.com,2025:endorsements/cca_realm#1.0.0'
+
+  - id: cca-realm-id
+    description: 3.2.2 - the Realm is identified by the RIM, in the class id
+    message: the environment must have a class id (the RIM)
+    given: $.triples['reference-values'][*].environment
+    then:
+      schema:
+        type: object
+        required: [class]
+        properties:
+          class: { type: object, required: [id] }
+
+  - id: cca-realm-mkey
+    description: 3.2.3 - the mkey MUST be cca.rim, cca.rpv or cca.rem0..cca.rem3
+    message: unexpected measurement key; expected cca.rim, cca.rpv or cca.rem0..cca.rem3
+    given: $.triples['reference-values'][*].measurements[*]
+    then:
+      schema:
+        type: object
+        required: [key]
+        properties:
+          key:
+            type: object
+            required: [type, value]
+            properties:
+              type: { const: string }
+              value: { enum: [cca.rim, cca.rpv, cca.rem0, cca.rem1, cca.rem2, cca.rem3] }
+
+  - id: cca-realm-authorized-by
+    description: 3.2.3 - authorized-by MUST NOT be present
+    message: authorized-by must not be present
+    given: $.triples['reference-values'][*].measurements[*]['authorized-by']
+    then:
+      count: { max: 0 }
+
+  - id: cca-realm-rim-mandatory
+    description: 3.2.3 - all the Realm Reference Values are optional except the RIM
+    message: the triple has no cca.rim measurement
+    given: $.triples['reference-values'][*].measurements
+    then:
+      schema:
+        contains:
+          type: object
+          required: [key]
+          properties:
+            key: { type: object, required: [value], properties: { value: { const: cca.rim } } }
+
+  - id: cca-realm-digests
+    description: 3.2.3 - the RIM and the REMs are encoded as digests
+    message: the RIM and REMs must be encoded as a non-empty digests
+    given: $.triples['reference-values'][*].measurements[?match(@.key.value, 'cca[.](rim|rem[0-3])')]
+    then:
+      schema:
+        type: object
+        required: [value]
+        properties:
+          value:
+            type: object
+            required: [digests]
+            properties:
+              digests: { type: array, minItems: 1 }
+
+  - id: cca-realm-rpv
+    description: 3.2.3 - the RPV is encoded as a raw-value of the bytes variant
+    message: the RPV must be encoded as a raw-value of type bytes
+    given: $.triples['reference-values'][*].measurements[?@.key.value == 'cca.rpv']
+    then:
+      schema:
+        type: object
+        required: [value]
+        properties:
+          value:
+            type: object
+            required: [raw-value]
+            properties:
+              raw-value:
+                type: object
+                required: [type]
+                properties:
+                  type: { const: bytes }

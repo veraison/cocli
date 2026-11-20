@@ -42,7 +42,7 @@
                 }
               ],
               "digests": [
-                [1, "BwYFBAMCAQAPDg0MCwoJCBcWFRQTEhEQHx4dHBsaGRg"]
+                ["sha-256", "BwYFBAMCAQAPDg0MCwoJCBcWFRQTEhEQHx4dHBsaGRg"]
               ],
               "name": "BL"
             }
@@ -60,7 +60,7 @@
                 }
               ],
               "digests": [
-                [1, "CwYFBAMCAQAPDg0MCwoJCBcWFRQTEhEQHx4dHBsaGRg"]
+                ["sha-256", "CwYFBAMCAQAPDg0MCwoJCBcWFRQTEhEQHx4dHBsaGRg"]
               ],
               "name": "PRoT"
             }
@@ -78,7 +78,7 @@
                 }
               ],
               "digests": [
-                [1, "DwYFBAMCAQAPDg0MCwoJCBcWFRQTEhEQHx4dHBsaGRg"]
+                ["sha-256", "DwYFBAMCAQAPDg0MCwoJCBcWFRQTEhEQHx4dHBsaGRg"]
               ],
               "name": "ARoT"
             }
@@ -116,18 +116,10 @@
           {
             "key": {
               "type": "string",
-              "value": "cca.rotpk.CM.3"
+              "value": "cca.rotpk.CM.3.2"
             },
             "value": {
               "cryptokeys": [
-                {
-                  "type": "bytes",
-                  "value": "U3h5YwdTXfPsjYsVouLcVkFBnD0wYM/jIjjA+pc/eqM="
-                },
-                {
-                  "type": "bytes",
-                  "value": "2sRqWEFdw6ANenQYUgCOnK5k9S0DufdtdvSzZE/vxBY="
-                }, 
                 {
                   "type": "bytes",
                   "value":  "aOZWslHmfoNYvvhIOrDVHGYZ8+ehqfDnWDjUH/No9yg="

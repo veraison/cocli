@@ -1,0 +1,129 @@
+{
+  "lang": "en-GB",
+  "tag-identity": {
+    "id": "43BBE37F-2E61-4B33-AED3-53CFF1428B16",
+    "version": 0
+  },
+  "entities": [
+    {
+      "name": "ACME Ltd.",
+      "regid": "https://acme.example",
+      "roles": [
+        "tagCreator",
+        "creator",
+        "maintainer"
+      ]
+    }
+  ],
+  "triples": {
+    "reference-values": [
+      {
+        "environment": {
+          "class": {
+            "id": {
+              "type": "bytes",
+              "value": "YWNtZS1pbXBsZW1lbnRhdGlvbi1pZC0wMDAwMDAwMDE="
+            },
+            "vendor": "ACME",
+            "model": "RoadRunner"
+          }
+        },
+        "measurements": [
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.software-component"
+            },
+            "value": {
+              "cryptokeys": [
+                {
+                  "type": "bytes",
+                  "value": "U3h5YwdTXfPsjYsVouLcVkFBnD0wYM/jIjjA+pc/eqM="
+                }
+              ],
+              "digests": [
+                [
+                  "sha-256",
+                  "h0KPxSKAPTEGXnvOPPA_5HUJZjHl4Hu9eg_eYMTPJcc"
+                ]
+              ],
+              "name": "BL"
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.platform-config"
+            },
+            "value": {
+              "raw-value": {
+                "type": "masked",
+                "value": {
+                  "value": "AQID",
+                  "mask": "BAUG"
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.platform-manufacturing-config"
+            },
+            "value": {
+              "raw-value": {
+                "type": "masked",
+                "value": {
+                  "value": "EBA=",
+                  "mask": "//8="
+                }
+              }
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.rotpk.CM.0.0"
+            },
+            "value": {
+              "cryptokeys": [
+                {
+                  "type": "bytes",
+                  "value": "U3h5YwdTXfPsjYsVouLcVkFBnD0wYM/jIjjA+pc/eqM="
+                }
+              ]
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.rotpk.CM.0.1"
+            },
+            "value": {
+              "cryptokeys": [
+                {
+                  "type": "bytes",
+                  "value": "2sRqWEFdw6ANenQYUgCOnK5k9S0DufdtdvSzZE/vxBY="
+                }
+              ]
+            }
+          },
+          {
+            "key": {
+              "type": "string",
+              "value": "cca.rotpk.CM.0.2"
+            },
+            "value": {
+              "cryptokeys": [
+                {
+                  "type": "bytes",
+                  "value": "aOZWslHmfoNYvvhIOrDVHGYZ8+ehqfDnWDjUH/No9yg="
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
