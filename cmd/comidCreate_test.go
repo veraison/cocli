@@ -190,9 +190,9 @@ func Test_ComidCreateCmd_template_with_dependency_triples(t *testing.T) {
 	var c comid.Comid
 	err = c.FromCBOR(cborData)
 	require.NoError(t, err)
-	require.NotNil(t, c.Triples.DomainDependencies)
-	require.False(t, c.Triples.DomainDependencies.IsEmpty())
-	dd := *c.Triples.DomainDependencies
+	require.NotNil(t, c.Triples.TrustDependencies)
+	require.False(t, c.Triples.TrustDependencies.IsEmpty())
+	dd := *c.Triples.TrustDependencies
 	require.Len(t, dd, 1)
 	assert.GreaterOrEqual(t, len(dd[0].Trustees), 1)
 	assert.NoError(t, dd[0].Valid())
