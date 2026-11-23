@@ -11,9 +11,9 @@ require (
 	github.com/spf13/viper v1.9.0
 	github.com/stretchr/testify v1.10.0
 	github.com/veraison/apiclient v0.3.1-0.20240807160142-9141ad363e45
-	github.com/veraison/corim v1.1.3-0.20261012130145-a6f38dd08fd4
+	github.com/veraison/corim v1.1.3-0.20261106115031-2c27d6fe6669
 	github.com/veraison/go-cose v1.3.0
-	github.com/veraison/swid v1.1.1-0.20251003121634-fd1f7f1e1897
+	github.com/veraison/swid v1.1.1-0.20261103161241-f3ade3481f31
 	go.uber.org/mock v0.6.0
 )
 
