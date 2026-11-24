@@ -29,7 +29,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:           "cocli",
 	Short:         "CoRIM & CoMID swiss-army knife",
-	Version:       "0.1.0",
+	Version:       version(),
 	SilenceUsage:  true,
 	SilenceErrors: true,
 }
