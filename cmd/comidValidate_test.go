@@ -124,7 +124,7 @@ func Test_ComidValidateCmd_with_valid_comid(t *testing.T) {
 	cmd := NewComidValidateCmd()
 
 	fs = afero.NewMemMapFs()
-	err = afero.WriteFile(fs, "ok.cbor", []byte(tdx.ComidSeamRefVal), 0644)
+	err = afero.WriteFile(fs, "ok.cbor", tdx.ComidSeamRefVal, 0644)
 	require.NoError(t, err)
 
 	args := []string{
@@ -133,7 +133,7 @@ func Test_ComidValidateCmd_with_valid_comid(t *testing.T) {
 	}
 	cmd.SetArgs(args)
 
-	fmt.Printf("%x\n", []byte(tdx.ComidSeamRefVal))
+	fmt.Printf("%x\n", tdx.ComidSeamRefVal)
 
 	err = cmd.Execute()
 	assert.NoError(t, err)

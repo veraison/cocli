@@ -107,7 +107,7 @@ func Test_ComidDisplayCmd_With_profile_with_valid_comid(t *testing.T) {
 	cmd := NewComidDisplayCmd()
 
 	fs = afero.NewMemMapFs()
-	err = afero.WriteFile(fs, "ok.cbor", []byte(tdx.ComidSeamRefVal), 0644)
+	err = afero.WriteFile(fs, "ok.cbor", tdx.ComidSeamRefVal, 0644)
 	require.NoError(t, err)
 
 	args := []string{

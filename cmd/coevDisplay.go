@@ -21,6 +21,7 @@ var (
 
 var coevDisplayCmd = NewCoevDisplayCmd()
 
+//nolint:dupl
 func NewCoevDisplayCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "display",
