@@ -1,0 +1,140 @@
+# Lint rules for PSA Endorsements, from draft-fdb-rats-psa-endorsements-10
+# (the PSA Endorsement profile, "tag:arm.com,2025:psa#1.0.0").
+#
+# Apply to a CoMID template, or to a CoRIM template (for the profile rule).
+# Rules are written against the cocli JSON template syntax.
+#
+# Not expressible yet: digests of a software component must have distinct
+# algorithms (3.3).
+rules:
+  - id: psa-profile
+    description: 3.1 - the profile MUST be tag:arm.com,2025:psa#1.0.0
+    message: the CoRIM profile must be tag:arm.com,2025:psa#1.0.0
+    given: $['profile']
+    then:
+      equals: 'tag:arm.com,2025:psa#1.0.0'
+
+  - id: psa-implementation-id
+    description: 3.2 - the Implementation ID MUST be exactly 32 bytes
+    message: the Implementation ID (class.id) must be present and be 32 bytes, base64-encoded
+    given: $.triples['reference-values'][*].environment
+    then:
+      schema:
+        type: object
+        required: [class]
+        properties:
+          class:
+            type: object
+            required: [id]
+            properties:
+              id:
+                type: object
+                required: [value]
+                properties:
+                  value: { type: string, pattern: '^[A-Za-z0-9+/]{43}=$' }
+
+  - id: psa-instance-id
+    description: 3.2 - the Instance ID MUST be a UEID of type RAND (0x01) followed by 32 bytes
+    message: the Instance ID must be a 33-byte UEID starting with 0x01
+    given: $.triples['attester-verification-keys'][*].environment.instance
+    then:
+      schema:
+        type: object
+        properties:
+          type: { const: ueid }
+          value: { type: string, pattern: '^A[Q-Za-f][A-Za-z0-9+/]{42}$' }
+
+  - id: psa-swcomp-mkey
+    description: 3.3 - the mkey MUST be the text "psa.software-component"
+    message: a PSA reference value measurement must have key "psa.software-component"
+    given: $.triples['reference-values'][*].measurements[*]
+    then:
+      schema:
+        type: object
+        required: [key]
+        properties:
+          key:
+            type: object
+            required: [type, value]
+            properties:
+              type: { const: string }
+              value: { const: psa.software-component }
+
+  - id: psa-swcomp-authorized-by
+    description: 3.3 - authorized-by MUST NOT be present
+    message: authorized-by must not be present
+    given: $.triples['reference-values'][*].measurements[*]['authorized-by']
+    then:
+      count: { max: 0 }
+
+  - id: psa-swcomp-mandatory-fields
+    description: 3.3 - digests and cryptokeys are mandatory; cryptokeys has exactly one entry
+    message: a software component needs a non-empty digests and exactly one cryptokey
+    given: $.triples['reference-values'][*].measurements[*]
+    then:
+      schema:
+        type: object
+        required: [value]
+        properties:
+          value:
+            type: object
+            required: [digests, cryptokeys]
+            properties:
+              digests: { type: array, minItems: 1 }
+              cryptokeys: { type: array, minItems: 1, maxItems: 1 }
+              name: { type: string }
+
+  - id: psa-swcomp-digest
+    description: 3.3 - the alg MUST be text; the value MUST be 32, 48 or 64 bytes
+    message: a digest must have a text algorithm and a 32, 48 or 64 bytes value
+    given: $.triples['reference-values'][*].measurements[*].value.digests[*]
+    then:
+      # cocli encodes a digest as [alg, unpadded base64url value]
+      schema:
+        type: array
+        minItems: 2
+        maxItems: 2
+        prefixItems:
+          - type: string
+          - type: string
+            pattern: '^([A-Za-z0-9_-]{43}|[A-Za-z0-9_-]{64}|[A-Za-z0-9_-]{86})$'
+
+  - id: psa-swcomp-signer-id
+    description: 3.3 - the signer ID MUST be 32, 48 or 64 bytes
+    message: the signer ID (cryptokey) must be a 32, 48 or 64 bytes value, base64-encoded
+    given: $.triples['reference-values'][*].measurements[*].value.cryptokeys[*]
+    then:
+      schema:
+        type: object
+        required: [type, value]
+        properties:
+          type: { const: bytes }
+          value: { type: string, pattern: '^([A-Za-z0-9+/]{43}=|[A-Za-z0-9+/]{64}|[A-Za-z0-9+/]{86}==)$' }
+
+  - id: psa-swcomp-version-scheme
+    description: 3.3 - the version-scheme MUST NOT be present
+    message: version scheme must not be present
+    given: $.triples['reference-values'][*].measurements[*].value.version.scheme
+    then:
+      count: { max: 0 }
+
+  - id: psa-avk-single-key
+    description: 3.4 - there MUST be only one key in an attest-key-triple-record
+    message: an attester verification key triple must carry exactly one key
+    given: $.triples['attester-verification-keys'][*]['verification-keys']
+    then:
+      length: { min: 1, max: 1 }
+
+  - id: psa-avk-type
+    description: 3.4 - the IAK public key uses the pkix-base64-key variant
+    message: the verification key must be a pkix-base64-key
+    given: $.triples['attester-verification-keys'][*]['verification-keys'][*].type
+    then:
+      equals: pkix-base64-key
+
+  - id: psa-cert-num
+    description: 3.5 - the certificate number is "nnnnnnnnnnnnn - nnnnn"
+    message: the certificate number must match [0-9]{13} - [0-9]{5}
+    given: $..['psa-cert-num']
+    then:
+      pattern: '^[0-9]{13} - [0-9]{5}$'

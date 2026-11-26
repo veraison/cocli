@@ -1,0 +1,208 @@
+# Lint rules for Arm CCA Platform Endorsements, from
+# draft-ydb-rats-cca-endorsements-04, section 3.1.
+#
+# Apply to a CoMID template, or to a CoRIM template (for the profile rule).
+# Rules are written against the cocli JSON template syntax.
+#
+# Not expressible yet: software component digests must have distinct
+# algorithms (3.1.3.1).
+rules:
+  - id: cca-platform-profile
+    description: 3.1.1 - the profile MUST be tag:arm.com,2025:endorsements/cca_platform#1.0.0
+    message: the CoRIM profile must be tag:arm.com,2025:endorsements/cca_platform#1.0.0
+    given: $['profile']
+    then:
+      equals: 'tag:arm.com,2025:endorsements/cca_platform#1.0.0'
+
+  - id: cca-platform-implementation-id
+    description: 3.1.2 - the Implementation ID MUST be exactly 32 bytes
+    message: the Implementation ID (class.id) must be present and be 32 bytes, base64-encoded
+    given: $.triples['reference-values'][*].environment
+    then:
+      schema:
+        type: object
+        required: [class]
+        properties:
+          class:
+            type: object
+            required: [id]
+            properties:
+              id:
+                type: object
+                required: [value]
+                properties:
+                  value: { type: string, pattern: '^[A-Za-z0-9+/]{43}=$' }
+
+  - id: cca-platform-instance-id
+    description: 3.1.2 - the Instance ID MUST be a UEID of type RAND (0x01) followed by 32 bytes
+    message: the Instance ID must be a 33-byte UEID starting with 0x01
+    given: $.triples['attester-verification-keys'][*].environment.instance
+    then:
+      schema:
+        type: object
+        properties:
+          type: { const: ueid }
+          value: { type: string, pattern: '^A[Q-Za-f][A-Za-z0-9+/]{42}$' }
+
+  - id: cca-platform-mkey
+    description: 3.1.3.1-4 - the only mkeys are the software component, platform config, manufacturing config and TBB ROTPK ones
+    message: >-
+      unexpected measurement key; expected cca.software-component,
+      cca.platform-config, cca.platform-manufacturing-config or
+      cca.rotpk.{CM,DM}.<array 0-7>.<entry 0-5>
+    given: $.triples['reference-values'][*].measurements[*]
+    then:
+      schema:
+        type: object
+        required: [key]
+        properties:
+          key:
+            type: object
+            required: [type, value]
+            properties:
+              type: { const: string }
+              value:
+                type: string
+                pattern: '^cca\.(software-component|platform-config|platform-manufacturing-config|rotpk\.[CD]M\.[0-7]\.[0-5])$'
+
+  - id: cca-platform-authorized-by
+    description: 3.1.3.1-4 - authorized-by MUST NOT be present
+    message: authorized-by must not be present
+    given: $.triples['reference-values'][*].measurements[*]['authorized-by']
+    then:
+      count: { max: 0 }
+
+  - id: cca-platform-config-count
+    description: 3.1.3.2 - there MUST be only one cca.platform-config measurement in the triple
+    message: a triple must have at most one cca.platform-config measurement
+    given: $.triples['reference-values'][*].measurements
+    then:
+      schema:
+        contains:
+          type: object
+          required: [key]
+          properties:
+            key: { type: object, required: [value], properties: { value: { const: cca.platform-config } } }
+        minContains: 0
+        maxContains: 1
+
+  - id: cca-platform-config-present
+    description: 3.1.3 - a single triple MUST completely describe the platform measurements
+    severity: warn
+    message: no cca.platform-config measurement in the triple
+    given: $.triples['reference-values'][*].measurements
+    then:
+      schema:
+        contains:
+          type: object
+          required: [key]
+          properties:
+            key: { type: object, required: [value], properties: { value: { const: cca.platform-config } } }
+
+  - id: cca-platform-manufacturing-config-count
+    description: 3.1.3.4 - there MUST be only one cca.platform-manufacturing-config measurement in the triple
+    message: a triple must have at most one cca.platform-manufacturing-config measurement
+    given: $.triples['reference-values'][*].measurements
+    then:
+      schema:
+        contains:
+          type: object
+          required: [key]
+          properties:
+            key: { type: object, required: [value], properties: { value: { const: cca.platform-manufacturing-config } } }
+        minContains: 0
+        maxContains: 1
+
+  - id: cca-platform-config-shape
+    description: 3.1.3.2, 3.1.3.4 - the value is a masked raw-value
+    message: the value must consist of a masked raw-value (value and mask)
+    given: $.triples['reference-values'][*].measurements[?match(@.key.value, 'cca[.]platform-(manufacturing-)?config')].value
+    then:
+      schema:
+        type: object
+        required: [raw-value]
+        additionalProperties: false
+        properties:
+          raw-value:
+            type: object
+            required: [type, value]
+            properties:
+              type: { const: masked }
+              value: { type: object, required: [value, mask] }
+
+  - id: cca-platform-swcomp-mandatory-fields
+    description: 3.1.3.1 - digests and cryptokeys are mandatory; cryptokeys has exactly one entry
+    message: a software component needs a non-empty digests and exactly one cryptokey
+    given: $.triples['reference-values'][*].measurements[?@.key.value == 'cca.software-component']
+    then:
+      schema:
+        type: object
+        required: [value]
+        properties:
+          value:
+            type: object
+            required: [digests, cryptokeys]
+            properties:
+              digests: { type: array, minItems: 1 }
+              cryptokeys: { type: array, minItems: 1, maxItems: 1 }
+              name: { type: string }
+
+  - id: cca-platform-swcomp-digest
+    description: 3.1.3.1 - the alg MUST be text; the value MUST be 32, 48 or 64 bytes
+    message: a digest must have a text algorithm and a 32, 48 or 64 bytes value
+    given: $.triples['reference-values'][*].measurements[?@.key.value == 'cca.software-component'].value.digests[*]
+    then:
+      # cocli encodes a digest as [alg, unpadded base64url value]
+      schema:
+        type: array
+        minItems: 2
+        maxItems: 2
+        prefixItems:
+          - type: string
+          - type: string
+            pattern: '^([A-Za-z0-9_-]{43}|[A-Za-z0-9_-]{64}|[A-Za-z0-9_-]{86})$'
+
+  - id: cca-platform-swcomp-version-scheme
+    description: 3.1.3.1 - the version-scheme MUST NOT be present
+    message: version scheme must not be present
+    given: $.triples['reference-values'][*].measurements[?@.key.value == 'cca.software-component'].value.version.scheme
+    then:
+      count: { max: 0 }
+
+  - id: cca-platform-signer-id
+    description: 3.1.3.1, 3.1.3.3 - the signer ID / public key identifier MUST be 32, 48 or 64 bytes
+    message: the cryptokey must be a 32, 48 or 64 bytes value, base64-encoded
+    given: $.triples['reference-values'][*].measurements[?match(@.key.value, 'cca[.](software-component|rotpk[.].*)')].value.cryptokeys[*]
+    then:
+      schema:
+        type: object
+        required: [type, value]
+        properties:
+          type: { const: bytes }
+          value: { type: string, pattern: '^([A-Za-z0-9+/]{43}=|[A-Za-z0-9+/]{64}|[A-Za-z0-9+/]{86}==)$' }
+
+  - id: cca-platform-rotpk-shape
+    description: 3.1.3.3 - a ROTPK measurement carries exactly one cryptokey, and nothing else
+    message: a cca.rotpk.* measurement must carry exactly one cryptokey and no other field
+    given: $.triples['reference-values'][*].measurements[?match(@.key.value, 'cca[.]rotpk[.].*')].value
+    then:
+      schema:
+        type: object
+        required: [cryptokeys]
+        additionalProperties: false
+        properties:
+          cryptokeys: { type: array, minItems: 1, maxItems: 1 }
+
+  - id: cca-platform-avk-single-key
+    description: 3.1.4 - there MUST be only one key in an attest-key-triple-record
+    message: an attester verification key triple must carry exactly one key
+    given: $.triples['attester-verification-keys'][*]['verification-keys']
+    then:
+      length: { min: 1, max: 1 }
+
+  - id: cca-platform-avk-type
+    description: 3.1.4 - the CPAK public key uses the pkix-base64-key variant
+    message: the verification key must be a pkix-base64-key
+    given: $.triples['attester-verification-keys'][*]['verification-keys'][*].type
+    then:
+      equals: pkix-base64-key

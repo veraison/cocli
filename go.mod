@@ -5,20 +5,22 @@ go 1.25.0
 require (
 	github.com/google/uuid v1.3.0
 	github.com/lestrrat-go/jwx/v2 v2.0.21
+	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
 	github.com/spf13/afero v1.9.2
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.9.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.12.1
+	github.com/theory/jsonpath v0.12.3
 	github.com/veraison/apiclient v0.3.1-0.20240807160142-9141ad363e45
 	github.com/veraison/corim v1.1.3-0.20261113123855-43f4a78fd0a7
 	github.com/veraison/go-cose v1.3.1-0.20260826103205-dea543bf9b89
 	github.com/veraison/swid v1.1.1-0.20261103161241-f3ade3481f31
 	go.uber.org/mock v0.6.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/fxamacker/cbor/v2 v2.9.0 // indirect
@@ -35,13 +37,13 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moogar0880/problems v0.1.1 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/veraison/eat v0.0.0-20210331113810-3da8a4dd42ff // indirect
 	github.com/x448/float16 v0.8.4 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.52.0 // indirect
 	golang.org/x/net v0.54.0 // indirect
 	golang.org/x/oauth2 v0.11.0 // indirect
@@ -51,5 +53,4 @@ require (
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/ini.v1 v1.63.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
